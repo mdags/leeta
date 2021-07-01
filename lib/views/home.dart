@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:leeta/views/cart.dart';
 import 'package:leeta/views/details.dart';
 import 'package:leeta/widgets/side_menu.dart';
 import 'package:leeta/widgets/variables.dart';
@@ -119,6 +120,8 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldKey,
       drawer: SideMenu(),
       body: bodyWidget(),
+      floatingActionButton:
+          FloatingActionButton(onPressed: () {}, child: Icon(Icons.search)),
     );
   }
 
@@ -143,23 +146,31 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onTap: () {
                       _scaffoldKey.currentState!.openDrawer();
-                      // Scaffold.of(context).openDrawer();
                     },
                   ),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: THEME_COLOR,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: BLACK,
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () => Navigator.of(context).push(
+                              new MaterialPageRoute(
+                                  builder: (context) => CartPage())),
+                          icon: Icon(Icons.shopping_cart)),
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: THEME_COLOR,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: BLACK,
+                          ),
+                          child: Icon(
+                            Icons.account_circle,
+                            size: 25,
+                            color: THEME_COLOR,
+                          ),
+                        ),
                       ),
-                      child: Icon(
-                        Icons.account_circle,
-                        size: 25,
-                        color: THEME_COLOR,
-                      ),
-                    ),
+                    ],
                   )
                 ],
               ),

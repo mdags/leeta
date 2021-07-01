@@ -30,13 +30,9 @@ class _DetailsPageState extends State<DetailsPage> {
   int quantity = 1;
   double actualPrice = 10;
   bool downloadingError = false;
-  double _progress = 0.0;
   String imagePath = "";
-  // Favourites favourites = Favourites();
   bool isLiked = false;
-  // CartITems cartITems = CartITems();
   var addedToppings = <Toppings>[];
-  // DetailsPageClass detailsPageClass;
   bool isDeleted = false;
   bool isLoading = false;
 
@@ -88,19 +84,6 @@ class _DetailsPageState extends State<DetailsPage> {
                                             },
                                             child: Image.asset(
                                               "assets/icons/back.png",
-                                              height: 15,
-                                              width: 15,
-                                              fit: BoxFit.contain,
-                                              color: BLACK,
-                                            )),
-                                        InkWell(
-                                            onTap: () {
-                                              // imagePath == null
-                                              // ? downloadImage()
-                                              // : Share.shareFiles([imagePath], text: widget.name + "\n\nThis part will contain application download link");
-                                            },
-                                            child: Image.asset(
-                                              "assets/icons/menu-res.png",
                                               height: 15,
                                               width: 15,
                                               fit: BoxFit.contain,
@@ -577,7 +560,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
             actions: isAdded
                 ? [
-                    FlatButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -591,13 +574,12 @@ class _DetailsPageState extends State<DetailsPage> {
                         ),
                       ),
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
                       },
-                      color: THEME_COLOR,
                       child: Text(
                         'CHECKOUT',
                         style: TextStyle(
@@ -605,6 +587,9 @@ class _DetailsPageState extends State<DetailsPage> {
                           color: BLACK,
                           fontWeight: FontWeight.w900,
                         ),
+                      ),
+                      style: TextButton.styleFrom(
+                        primary: THEME_COLOR,
                       ),
                     ),
                   ]

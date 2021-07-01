@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:leeta/views/cart.dart';
+import 'package:leeta/views/favourites.dart';
+import 'package:leeta/views/order_history.dart';
 import 'package:leeta/views/home.dart';
+import 'package:leeta/views/login.dart';
+import 'package:leeta/views/privacy_policy.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class SideMenu extends StatefulWidget {
@@ -10,7 +15,7 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   int totalCartItems = 0;
   // CartITems cartITems = CartITems();
-  bool isLoggedIn = false;
+  bool isLoggedIn = true;
   String name = "";
   String email = "";
   String userId = "";
@@ -55,14 +60,12 @@ class _SideMenuState extends State<SideMenu> {
                     InkWell(
                       onTap: () {
                         if (!isLoggedIn) {
-                          // Navigator.push(context,
-                          // MaterialPageRoute(builder: (context) => LoginAsCustomer()),
-                          // );
-                        }
-                        if (vehicalNumber != null) {
-                          // Navigator.push(context,
-                          //   MaterialPageRoute(builder: (context) => DeliveryBoyProfile()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
+                          HomePage().createState().closeDrawer(context);
                         }
                       },
                       child: Row(
@@ -86,7 +89,7 @@ class _SideMenuState extends State<SideMenu> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                isLoggedIn ? name : 'SIGN_IN',
+                                isLoggedIn ? name : 'Sign In',
                                 style: TextStyle(
                                   fontFamily: 'GlobalFonts',
                                   color: BLACK,
@@ -98,7 +101,7 @@ class _SideMenuState extends State<SideMenu> {
                                 height: 8,
                               ),
                               Text(
-                                isLoggedIn ? email : 'PROFILE',
+                                isLoggedIn ? email : 'Profile',
                                 style: TextStyle(
                                   fontFamily: 'GlobalFonts',
                                   color: GREY,
@@ -140,7 +143,7 @@ class _SideMenuState extends State<SideMenu> {
                           ),
                         ),
                         onTap: () {
-                          // HomeScreen().createState().closeDrawer(context);
+                          HomePage().createState().closeDrawer(context);
                         },
                         leading: Image.asset(
                           "assets/icons/1.png",
@@ -187,10 +190,12 @@ class _SideMenuState extends State<SideMenu> {
                             ),
                           ),
                         ),
-                        onTap: () async {
-                          //   await Navigator.push(context,
-                          //     MaterialPageRoute(builder: (context) => CartPage()),
-                          //   );
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => CartPage()),
+                          );
+                          HomePage().createState().closeDrawer(context);
                           //   read();
                         },
                       ),
@@ -199,7 +204,7 @@ class _SideMenuState extends State<SideMenu> {
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: ListTile(
                         title: Text(
-                          "  Orders",
+                          "  Order History",
                           style: TextStyle(
                               fontFamily: 'GlobalFonts',
                               color: BLACK,
@@ -210,7 +215,12 @@ class _SideMenuState extends State<SideMenu> {
                           // userId == null
                           //     ? showdialog()
                           //     //? Navigator.push(context, MaterialPageRoute(builder: (context) => LoginAsCustomer()))
-                          //     : Navigator.push(context, MaterialPageRoute(builder: (context) => bookorderscreen()));
+                          //:
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderHistoryPage()));
+                          HomePage().createState().closeDrawer(context);
                         },
                         leading: Image.asset(
                           "assets/icons/3.png",
@@ -233,11 +243,12 @@ class _SideMenuState extends State<SideMenu> {
                               fontSize: 14),
                         ),
                         onTap: () {
-                          // Navigator.push(context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => FavouritesPage(),
-                          //   )
-                          // );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FavouritesPage(),
+                              ));
+                          HomePage().createState().closeDrawer(context);
                         },
                         leading: Image.asset(
                           "assets/icons/4.png",
@@ -260,6 +271,7 @@ class _SideMenuState extends State<SideMenu> {
                               fontSize: 14),
                         ),
                         onTap: () {
+                          HomePage().createState().closeDrawer(context);
                           // Navigator.push(context,
                           //   MaterialPageRoute(builder: (context) => AboutUs()),
                           // );
@@ -285,9 +297,12 @@ class _SideMenuState extends State<SideMenu> {
                               fontSize: 14),
                         ),
                         onTap: () {
-                          // Navigator.push(context,
-                          //   MaterialPageRoute(builder: (context) => PrivacyPolicy()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PrivacyPolicyPage()),
+                          );
+                          HomePage().createState().closeDrawer(context);
                         },
                         leading: Image.asset(
                           "assets/icons/6.png",
@@ -383,7 +398,7 @@ class _SideMenuState extends State<SideMenu> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -396,11 +411,10 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                 ),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginAsCustomer()));
                 },
-                color: THEME_COLOR,
                 child: Text(
                   'YES',
                   style: TextStyle(
@@ -408,6 +422,9 @@ class _SideMenuState extends State<SideMenu> {
                     color: BLACK,
                     fontWeight: FontWeight.w900,
                   ),
+                ),
+                style: TextButton.styleFrom(
+                  primary: THEME_COLOR,
                 ),
               ),
             ],
@@ -442,7 +459,7 @@ class _SideMenuState extends State<SideMenu> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -455,7 +472,7 @@ class _SideMenuState extends State<SideMenu> {
                   ),
                 ),
               ),
-              FlatButton(
+              TextButton(
                 onPressed: () async {
                   // await SharedPreferences.getInstance().then((pref){
                   //   pref.setBool("isLoggedIn", false);
@@ -469,7 +486,6 @@ class _SideMenuState extends State<SideMenu> {
                   //   MaterialPageRoute(builder: (context) => HomeScreen()),
                   // );
                 },
-                color: THEME_COLOR,
                 child: Text(
                   'YES',
                   style: TextStyle(
@@ -477,6 +493,9 @@ class _SideMenuState extends State<SideMenu> {
                     color: BLACK,
                     fontWeight: FontWeight.w900,
                   ),
+                ),
+                style: TextButton.styleFrom(
+                  primary: THEME_COLOR,
                 ),
               ),
             ],

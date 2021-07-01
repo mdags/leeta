@@ -13,11 +13,14 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.3
   http:
+  google_fonts:
+  path_provider:
   shared_preferences:
   easy_localization:
   file_picker:
-  cached_network_image:
   flare_flutter:
+  google_maps_flutter:
+  google_maps_place_picker: 2.0.0-nullsafety.3
 
 dev_dependencies:
   flutter_test:

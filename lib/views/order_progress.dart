@@ -30,7 +30,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
       contact: " ",
       deliveredDateTime: " ",
       deliveredStatus: " ",
-      deliveryCharges: " ",
+      deliveryCharges: "10.00",
       deliveryMode: " ",
       dispatchedStatus: " ",
       itemOrder: 1,
@@ -82,7 +82,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                                       height: 5,
                                     ),
                                     Text(
-                                      'ORDER_PLACED',
+                                      'Order Accepted',
                                       style: TextStyle(
                                           fontFamily: 'GlobalFonts',
                                           color: GREY.withOpacity(0.7),
@@ -114,7 +114,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                                       height: 5,
                                     ),
                                     Text(
-                                      'PREPARING',
+                                      'Preparing',
                                       style: TextStyle(
                                           fontFamily: 'GlobalFonts',
                                           color: GREY.withOpacity(0.7),
@@ -146,7 +146,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                                       height: 5,
                                     ),
                                     Text(
-                                      'DISPATCHING',
+                                      'Arriving Soon',
                                       style: TextStyle(
                                           fontFamily: 'GlobalFonts',
                                           color: GREY.withOpacity(0.7),
@@ -178,7 +178,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                                       height: 5,
                                     ),
                                     Text(
-                                      'DELIVERED',
+                                      'Delivered',
                                       style: TextStyle(
                                           fontFamily: 'GlobalFonts',
                                           color: GREY.withOpacity(0.7),
@@ -482,7 +482,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'SHIPPING_CHARGE',
+                                        'Shipping Charge',
                                         style: TextStyle(
                                             fontFamily: 'GlobalFonts',
                                             color: BLACK,
@@ -490,13 +490,11 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                                             fontSize: 16),
                                       ),
                                       Text(
-                                        orderProcessClass.orderDetails[0]
-                                                .deliveryCharges ??
-                                            "0",
+                                        "10.00",
                                         style: TextStyle(
                                             fontFamily: 'GlobalFonts',
-                                            color: GREY.withOpacity(0.7),
-                                            fontWeight: FontWeight.w900,
+                                            color: BLACK,
+                                            fontWeight: FontWeight.bold,
                                             fontSize: 14),
                                       )
                                     ],
@@ -533,7 +531,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                           width: 10,
                         ),
                         Text(
-                          "ORDER_NUMBER - ${widget.id}",
+                          "Order No. - ${widget.id}",
                           style: TextStyle(
                               fontFamily: 'GlobalFonts',
                               color: BLACK,

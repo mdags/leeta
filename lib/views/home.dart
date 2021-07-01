@@ -1,8 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:leeta/views/about_us.dart';
 import 'package:leeta/views/cart.dart';
 import 'package:leeta/views/details.dart';
+import 'package:leeta/views/order_history.dart';
+import 'package:leeta/views/profile.dart';
 import 'package:leeta/widgets/side_menu.dart';
 import 'package:leeta/widgets/variables.dart';
 
@@ -45,6 +47,7 @@ class _HomePageState extends State<HomePage> {
         2,
         "https://ak.picdn.net/shutterstock/videos/34850332/thumb/7.jpg",
         "Test 2"));
+
     selectedCat.add(new SubCategory(
         1,
         1,
@@ -118,10 +121,84 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: SideMenu(),
+      // drawer: SideMenu(),
       body: bodyWidget(),
-      floatingActionButton:
-          FloatingActionButton(onPressed: () {}, child: Icon(Icons.search)),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(
+            Icons.search,
+            size: 32,
+          )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        elevation: 0.0,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: CircularNotchedRectangle(),
+        child: Theme(
+            data: Theme.of(context)
+                .copyWith(canvasColor: LIGHT_GREY, primaryColor: THEME_COLOR),
+            child: BottomNavigationBar(
+              selectedItemColor: BLACK,
+              unselectedItemColor: BLACK,
+              type: BottomNavigationBarType.fixed,
+              elevation: 0.0,
+              onTap: (index) {
+                switch (index) {
+                  case 1:
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) => CartPage()));
+                    break;
+                  case 2:
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) => OrderHistoryPage()));
+                    break;
+                  case 3:
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) => AboutUsPage()));
+                    break;
+                  default:
+                }
+              },
+              items: [
+                BottomNavigationBarItem(
+                    icon: Image.asset(
+                      "assets/icons/1.png",
+                      height: 25,
+                      width: 25,
+                      color: BLACK,
+                      fit: BoxFit.contain,
+                    ),
+                    label: 'Categories'),
+                BottomNavigationBarItem(
+                    icon: Image.asset(
+                      "assets/icons/2.png",
+                      height: 25,
+                      width: 25,
+                      color: BLACK,
+                      fit: BoxFit.contain,
+                    ),
+                    label: 'My Cart'),
+                BottomNavigationBarItem(
+                    icon: Image.asset(
+                      "assets/icons/3.png",
+                      height: 25,
+                      width: 25,
+                      color: BLACK,
+                      fit: BoxFit.contain,
+                    ),
+                    label: 'Order History'),
+                BottomNavigationBarItem(
+                    icon: Image.asset(
+                      "assets/icons/5.png",
+                      height: 25,
+                      width: 25,
+                      color: BLACK,
+                      fit: BoxFit.contain,
+                    ),
+                    label: 'About Us'),
+              ],
+            )),
+      ),
     );
   }
 
@@ -136,41 +213,44 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    child: Image.asset(
-                      "assets/images/menu.png",
-                      width: 25,
-                      height: 15,
-                      color: BLACK,
-                      fit: BoxFit.contain,
-                    ),
-                    onTap: () {
-                      _scaffoldKey.currentState!.openDrawer();
-                    },
+                  // InkWell(
+                  //   child: Image.asset(
+                  //     "assets/images/menu.png",
+                  //     width: 25,
+                  //     height: 15,
+                  //     color: BLACK,
+                  //     fit: BoxFit.contain,
+                  //   ),
+                  //   onTap: () {
+                  //     _scaffoldKey.currentState!.openDrawer();
+                  //   },
+                  // ),
+                  Text(
+                    'Leeta',
+                    style: TextStyle(
+                        fontFamily: 'GlobalFonts',
+                        fontSize: 35,
+                        fontWeight: FontWeight.w900),
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () => Navigator.of(context).push(
-                              new MaterialPageRoute(
-                                  builder: (context) => CartPage())),
-                          icon: Icon(Icons.shopping_cart)),
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: THEME_COLOR,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: BLACK,
-                          ),
-                          child: Icon(
-                            Icons.account_circle,
-                            size: 25,
-                            color: THEME_COLOR,
-                          ),
+                  InkWell(
+                    onTap: () => Navigator.of(context).push(
+                        new MaterialPageRoute(
+                            builder: (context) => ProfilePage())),
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: THEME_COLOR,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: BLACK,
+                        ),
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 25,
+                          color: THEME_COLOR,
                         ),
                       ),
-                    ],
+                    ),
                   )
                 ],
               ),
@@ -184,16 +264,16 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 25,
                 ),
-                Text(
-                  'Leeta',
-                  style: TextStyle(
-                      fontFamily: 'GlobalFonts',
-                      fontSize: 35,
-                      fontWeight: FontWeight.w900),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
+                // Text(
+                //   'Leeta',
+                //   style: TextStyle(
+                //       fontFamily: 'GlobalFonts',
+                //       fontSize: 35,
+                //       fontWeight: FontWeight.w900),
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // ),
                 Container(
                   height: 110,
                   child: ListView.builder(
@@ -295,16 +375,16 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CachedNetworkImage(
-                            imageUrl: imagePath,
+                          Image.network(
+                            imagePath,
                             height: 25,
                             width: 25,
-                            placeholder: (context, url) => Icon(
-                              Icons.image,
-                              color: LIGHT_GREY,
-                            ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                            // placeholder: (context, url) => Icon(
+                            //   Icons.image,
+                            //   color: LIGHT_GREY,
+                            // ),
+                            // errorWidget: (context, url, error) =>
+                            //     Icon(Icons.error),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -362,26 +442,26 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: CachedNetworkImage(
-                        imageUrl: image,
+                      child: Image.network(
+                        image,
                         fit: BoxFit.fill,
                         width: 200,
-                        placeholder: (context, url) => Container(
-                            color: WHITE,
-                            child: Center(
-                                child: Icon(
-                              Icons.image,
-                              color: LIGHT_GREY,
-                              size: 35,
-                            ))),
-                        errorWidget: (context, url, error) => Container(
-                            color: WHITE,
-                            child: Center(
-                                child: Icon(
-                              Icons.error,
-                              color: LIGHT_GREY,
-                              size: 35,
-                            ))),
+                        // placeholder: (context, url) => Container(
+                        //     color: WHITE,
+                        //     child: Center(
+                        //         child: Icon(
+                        //       Icons.image,
+                        //       color: LIGHT_GREY,
+                        //       size: 35,
+                        //     ))),
+                        // errorWidget: (context, url, error) => Container(
+                        //     color: WHITE,
+                        //     child: Center(
+                        //         child: Icon(
+                        //       Icons.error,
+                        //       color: LIGHT_GREY,
+                        //       size: 35,
+                        //     ))),
                       ),
                     ),
                   ),

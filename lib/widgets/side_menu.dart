@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leeta/views/about_us.dart';
 import 'package:leeta/views/cart.dart';
 import 'package:leeta/views/favourites.dart';
 import 'package:leeta/views/order_history.dart';
@@ -15,7 +16,7 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   int totalCartItems = 0;
   // CartITems cartITems = CartITems();
-  bool isLoggedIn = true;
+  bool isLoggedIn = false;
   String name = "";
   String email = "";
   String userId = "";
@@ -271,10 +272,12 @@ class _SideMenuState extends State<SideMenu> {
                               fontSize: 14),
                         ),
                         onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AboutUsPage()),
+                          );
                           HomePage().createState().closeDrawer(context);
-                          // Navigator.push(context,
-                          //   MaterialPageRoute(builder: (context) => AboutUs()),
-                          // );
                         },
                         leading: Image.asset(
                           "assets/icons/5.png",

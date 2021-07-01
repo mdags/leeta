@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:leeta/widgets/variables.dart';
 
@@ -95,19 +94,19 @@ class _DetailsPageState extends State<DetailsPage> {
                                       margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
-                                        child: CachedNetworkImage(
-                                          imageUrl: widget.image,
+                                        child: Image.network(
+                                          widget.image,
                                           height: 200,
-                                          placeholder: (context, url) => Icon(
-                                            Icons.image,
-                                            color: LIGHT_GREY,
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              50,
+                                          // placeholder: (context, url) => Icon(
+                                          //   Icons.image,
+                                          //   color: LIGHT_GREY,
+                                          // ),
+                                          // errorWidget: (context, url, error) =>
+                                          //     Icon(Icons.error),
+                                          // width: MediaQuery.of(context)
+                                          //         .size
+                                          //         .width -
+                                          //     50,
                                           fit: BoxFit.cover,
                                         ),
                                       ),

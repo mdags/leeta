@@ -36,10 +36,10 @@ class MyApp extends StatelessWidget {
         supportedLocales: context.supportedLocales,
         locale: context.locale,
         theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-          accentColor: Colors.deepOrange.shade100,
-          primaryColor: Colors.deepOrange,
-        ),
+            primarySwatch: Colors.deepOrange,
+            accentColor: Colors.deepOrange.shade100,
+            primaryColor: Colors.deepOrange,
+            appBarTheme: AppBarTheme(backgroundColor: Colors.white)),
         routes: <String, WidgetBuilder>{
           '/login': (BuildContext context) => new LoginPage(),
         },

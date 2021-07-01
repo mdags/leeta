@@ -1,11 +1,12 @@
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:leeta/models/category_model.dart';
+import 'package:leeta/models/product_model.dart';
+import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/about_us.dart';
 import 'package:leeta/views/cart.dart';
 import 'package:leeta/views/details.dart';
 import 'package:leeta/views/order_history.dart';
 import 'package:leeta/views/profile.dart';
-import 'package:leeta/widgets/side_menu.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,98 +20,57 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedItemIndex = 0;
   var isSelected = <bool>[];
-  bool isCategoryLoaded = false;
-  bool isSelectedCategoryLoaded = false;
-  var categories = <Categories>[];
-  var selectedCat = <SubCategory>[];
+  bool isCategoryLoading = false;
+  bool isProductLoading = false;
+  var categories = <CategoryModel>[];
+  var products = <ProductModel>[];
   int totalCartItems = 0;
   String cartImage1 = "";
   String cartImage2 = "";
   String cartImage3 = "";
 
-  categorySelected(int category) async {
+  void fetchList() async {
     setState(() {
-      isSelectedCategoryLoaded = false;
+      isCategoryLoading = true;
+      isProductLoading = true;
     });
+
+    try {
+      var data = await ApiProvider.fetchCategories();
+      if (data != null) {
+        categories = data;
+
+        for (int i = 0; i < categories.length; i++) {
+          isSelected.add(false);
+        }
+        setState(() {
+          isSelected[0] = !isSelected[0];
+        });
+      }
+    } finally {
+      setState(() {
+        isCategoryLoading = false;
+      });
+    }
+
+    try {
+      var pData = await ApiProvider.fetchProducts();
+      if (pData != null) {
+        setState(() {
+          products = pData;
+        });
+      }
+    } finally {
+      setState(() {
+        isProductLoading = false;
+      });
+    }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    categories.add(new Categories(
-        1,
-        "https://ak.picdn.net/shutterstock/videos/34850332/thumb/7.jpg",
-        "Test"));
-    categories.add(new Categories(
-        2,
-        "https://ak.picdn.net/shutterstock/videos/34850332/thumb/7.jpg",
-        "Test 2"));
-
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 1",
-        "5",
-        "Test Desc 2"));
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 2",
-        "50",
-        "Test Desc 2"));
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 1",
-        "5",
-        "Test Desc 2"));
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 2",
-        "50",
-        "Test Desc 2"));
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 1",
-        "5",
-        "Test Desc 2"));
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 2",
-        "50",
-        "Test Desc 2"));
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 1",
-        "5",
-        "Test Desc 2"));
-    selectedCat.add(new SubCategory(
-        1,
-        1,
-        "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-        "Test 2",
-        "50",
-        "Test Desc 2"));
-
-    for (int i = 0; i < categories.length; i++) {
-      isSelected.add(false);
-    }
-    setState(() {
-      isSelected[0] = !isSelected[0];
-    });
+    fetchList();
   }
 
   closeDrawer(BuildContext context) {
@@ -282,59 +242,41 @@ class _HomePageState extends State<HomePage> {
                     physics: ClampingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return category(
-                          categories[index].cat_icon!,
-                          categories[index].cat_name!,
-                          index,
-                          categories[index].id);
+                      return category(categories[index].imgPath!,
+                          categories[index].name, index, categories[index].id);
                     },
                   ),
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                Text(
-                  'Popular',
-                  style: TextStyle(
-                      fontFamily: 'GlobalFonts',
-                      fontSize: 15,
-                      color: BLACK,
-                      fontWeight: FontWeight.w600),
-                ),
+                products.length > 0
+                    ? Text(
+                        'Popular',
+                        style: TextStyle(
+                            fontFamily: 'GlobalFonts',
+                            fontSize: 15,
+                            color: BLACK,
+                            fontWeight: FontWeight.w600),
+                      )
+                    : Center(),
                 SizedBox(
                   height: 5,
                 ),
-                selectedCat.length == 0
-                    ? Container(
-                        height: 150,
-                        width: 150,
-                        child: Padding(
-                          padding: const EdgeInsets.all(80),
-                          child: Center(
-                              child: FlareActor(
-                            "assets/images/loading.flr",
-                            fit: BoxFit.contain,
-                            animation: "loading",
-                          )),
-                        ),
-                      )
-                    : GridView.count(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 2,
-                        mainAxisSpacing: 5,
-                        shrinkWrap: true,
-                        childAspectRatio: 0.8,
-                        physics: ClampingScrollPhysics(),
-                        children: List.generate(selectedCat.length, (index) {
-                          return subCategoryCard(
-                            selectedCat[index].id,
-                            selectedCat[index].menu_name!,
-                            selectedCat[index].menu_image!,
-                            selectedCat[index].price,
-                            selectedCat[index].description,
-                          );
-                        }),
-                      )
+                GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 5,
+                  shrinkWrap: true,
+                  childAspectRatio: 0.8,
+                  physics: ClampingScrollPhysics(),
+                  children: List.generate(products.length, (index) {
+                    return productCard(products[index]);
+                  }),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
               ],
             ),
           ),
@@ -344,14 +286,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget category(String imagePath, String name, int index, int id) {
-    return !isCategoryLoaded
-        ? InkWell(
+    return isCategoryLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : InkWell(
             onTap: () {
               setState(() {
                 isSelected[selectedItemIndex] = false;
                 selectedItemIndex = index;
                 isSelected[index] = !isSelected[index];
-                categorySelected(id);
+                // categorySelected(id);
               });
             },
             child: Container(
@@ -404,119 +349,95 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          )
-        : CircularProgressIndicator();
+          );
   }
 
-  Widget subCategoryCard(
-      int id, String name, String image, String price, String description) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailsPage(
-                name: "Gourmet thin pesto amore",
-                image:
-                    "https://www.allianceplast.com/wp-content/uploads/2017/11/no-image.png",
-                description:
-                    "Fall in love pesto all over  again with 10 thin crust topped with spinach, red onions",
-                id: 1),
-          ),
-        );
-      },
-      child: Card(
-        color: LIGHT_GREY,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Container(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        image,
-                        fit: BoxFit.fill,
-                        width: 200,
-                        // placeholder: (context, url) => Container(
-                        //     color: WHITE,
-                        //     child: Center(
-                        //         child: Icon(
-                        //       Icons.image,
-                        //       color: LIGHT_GREY,
-                        //       size: 35,
-                        //     ))),
-                        // errorWidget: (context, url, error) => Container(
-                        //     color: WHITE,
-                        //     child: Center(
-                        //         child: Icon(
-                        //       Icons.error,
-                        //       color: LIGHT_GREY,
-                        //       size: 35,
-                        //     ))),
-                      ),
+  Widget productCard(ProductModel product) {
+    return isProductLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsPage(product: product),
+                ),
+              );
+            },
+            child: Card(
+              color: LIGHT_GREY,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Container(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Hero(
+                              tag: product.id.toString(),
+                              child: Image.network(
+                                product.imgPath!,
+                                fit: BoxFit.fill,
+                                width: 200,
+                                // placeholder: (context, url) => Container(
+                                //     color: WHITE,
+                                //     child: Center(
+                                //         child: Icon(
+                                //       Icons.image,
+                                //       color: LIGHT_GREY,
+                                //       size: 35,
+                                //     ))),
+                                // errorWidget: (context, url, error) => Container(
+                                //     color: WHITE,
+                                //     child: Center(
+                                //         child: Icon(
+                                //       Icons.error,
+                                //       color: LIGHT_GREY,
+                                //       size: 35,
+                                //     ))),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          product.currencySymbol! +
+                              product.unitPrice.toStringAsFixed(2),
+                          style: TextStyle(
+                              fontFamily: 'GlobalFonts',
+                              fontSize: 24,
+                              color: BLACK,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          product.name,
+                          style: TextStyle(
+                              fontFamily: 'GlobalFonts',
+                              color: BLACK,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w900),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    price,
-                    style: TextStyle(
-                        fontFamily: 'GlobalFonts',
-                        fontSize: 24,
-                        color: BLACK,
-                        fontWeight: FontWeight.w800),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    name,
-                    style: TextStyle(
-                        fontFamily: 'GlobalFonts',
-                        color: BLACK,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w900),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
-}
-
-class Categories {
-  int id;
-  String? cat_icon;
-  String? cat_name;
-  String? created_at;
-  String? updated_at;
-
-  Categories(this.id, this.cat_icon, this.cat_name);
-}
-
-class SubCategory {
-  int id;
-  int category;
-  String description;
-  String? menu_image;
-  String? menu_name;
-  String? created_at;
-  String? updated_at;
-  String price;
-
-  SubCategory(this.id, this.category, this.menu_image, this.menu_name,
-      this.price, this.description);
 }

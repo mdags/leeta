@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leeta/models/product_model.dart';
+import 'package:leeta/providers/api_provider.dart';
+import 'package:leeta/views/cart.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -12,20 +14,35 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  var options = <bool>[];
-  // var toppingData = <Toppings>[];
-  // var toppingTitle = <Toppings>[];
-  bool isLoadingToppings = false;
-  int titleLength = 0;
-  var toppingLength = <int>[];
   int quantity = 1;
   double actualPrice = 10;
-  bool downloadingError = false;
-  String imagePath = "";
-  bool isLiked = false;
-  // var addedToppings = <Toppings>[];
-  bool isDeleted = false;
-  bool isLoading = false;
+  bool isFavourite = false;
+
+  void setFavourite() async {
+    var response = await ApiProvider.setFavourite(widget.product.id.toString());
+    print(response);
+    setState(() {
+      isFavourite = !isFavourite;
+    });
+  }
+
+  Future<void> setCart() async {
+    var response = await ApiProvider.setCart(
+        widget.product.id.toString(), quantity.toString());
+    if (!response.contains("err:")) {
+      widget.product.cartCount = quantity;
+    }
+    print(response);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isFavourite = widget.product.isFavourite == 1 ? true : false;
+      quantity = widget.product.cartCount == 0 ? 1 : widget.product.cartCount!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +51,7 @@ class _DetailsPageState extends State<DetailsPage> {
         elevation: 0.0,
         leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(
-              Icons.arrow_back_ios_new,
-              color: BLACK,
-            )),
+            icon: Icon(Icons.arrow_back_ios_new)),
       ),
       body: Stack(
         children: [
@@ -89,12 +103,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                 Expanded(
                                   child: Text(
                                     widget.product.name,
-                                    style: TextStyle(
-                                      fontFamily: 'GlobalFonts',
-                                      color: BLACK,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style:
+                                        STD_TEXT_STYLE.copyWith(fontSize: 24),
                                   ),
                                 ),
                               ],
@@ -127,18 +137,13 @@ class _DetailsPageState extends State<DetailsPage> {
                                             setState(() {
                                               if (quantity > 1) {
                                                 quantity -= 1;
-                                                // widget.price =  (double.parse(widget.price) - double.parse(widget.price)/(quantity+1)).toString();
                                               }
                                             });
                                           }),
                                       Text(
                                         quantity.toString(),
-                                        style: TextStyle(
-                                          fontFamily: 'GlobalFonts',
-                                          color: BLACK,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: STD_TEXT_STYLE.copyWith(
+                                            fontSize: 17),
                                       ),
                                       IconButton(
                                           padding: EdgeInsets.zero,
@@ -152,20 +157,16 @@ class _DetailsPageState extends State<DetailsPage> {
                                           onPressed: () {
                                             setState(() {
                                               quantity += 1;
-                                              // widget.price =  (double.parse(widget.price) + double.parse(widget.price)/(quantity-1)).toString();
                                             });
                                           }),
                                     ],
                                   ),
                                 ),
                                 Text(
-                                  "${double.parse('20').toStringAsFixed(2)}",
-                                  style: TextStyle(
-                                    fontFamily: 'GlobalFonts',
-                                    color: BLACK,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  widget.product.currencySymbol! +
+                                      widget.product.unitPrice
+                                          .toStringAsFixed(2),
+                                  style: STD_TEXT_STYLE.copyWith(fontSize: 30),
                                 ),
                               ],
                             ),
@@ -174,103 +175,9 @@ class _DetailsPageState extends State<DetailsPage> {
                             ),
                             Text(
                               widget.product.description!,
-                              style: TextStyle(
-                                  fontFamily: 'GlobalFonts',
-                                  color: GREY,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.5),
+                              style: STD_TEXT_STYLE.copyWith(
+                                  color: GREY, fontSize: 12, height: 1.5),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Visibility(
-                              visible: isLoadingToppings,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'EXTRA_CHOOSE_A_TOPPING',
-                                    style: TextStyle(
-                                      fontFamily: 'GlobalFonts',
-                                      color: BLACK,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            !isLoadingToppings
-                                ? SingleChildScrollView(
-                                    child: Column(
-                                      children: List.generate(titleLength, (i) {
-                                        return Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'toppingTitle[i].title',
-                                                  style: TextStyle(
-                                                    fontFamily: 'GlobalFonts',
-                                                    color: BLACK,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            // Container(
-                                            //   child: GridView.count(
-                                            //     shrinkWrap: true,
-                                            //     physics:
-                                            //         ClampingScrollPhysics(),
-                                            //     crossAxisCount: 2,
-                                            //     childAspectRatio: 3,
-                                            //     crossAxisSpacing: 5,
-                                            //     mainAxisSpacing: 10,
-                                            //     children:
-                                            //         List.generate(
-                                            //             toppingLength[
-                                            //                 i],
-                                            //             (index) {
-                                            //       //print(toppingData[index+(i==0?0:toppingLength[i-1])].toppingName);
-                                            //       int toppingIndex =
-                                            //           0;
-                                            //       for (int x = 0;
-                                            //           x < i;
-                                            //           x++) {
-                                            //         toppingIndex =
-                                            //             toppingIndex +
-                                            //                 toppingLength[
-                                            //                     x];
-                                            //       }
-                                            //       return optionsMenu(
-                                            //           'toppingData[index+toppingIndex].toppingName',
-                                            //           index +
-                                            //               toppingIndex);
-                                            //     }),
-                                            //   ),
-                                            // ),
-                                            // SizedBox(
-                                            //   height: 10,
-                                            // ),
-                                          ],
-                                        );
-                                      }),
-                                    ),
-                                  )
-                                : Container(
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                          AlwaysStoppedAnimation(THEME_COLOR),
-                                    ),
-                                  )
                           ],
                         ),
                       ),
@@ -280,200 +187,71 @@ class _DetailsPageState extends State<DetailsPage> {
               ),
             ),
           ),
-          isDeleted
-              ? Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 60,
-                    color: WHITE,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: () async {
-                                // await favourites.removeFromFavourites(widget.id);
-                                Navigator.pop(context, true);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: THEME_COLOR,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'REMOVE_FROM_FAVOURITES',
-                                    style: TextStyle(
-                                      fontFamily: 'GlobalFonts',
-                                      color: BLACK,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 60,
+              color: WHITE,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: Row(
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          setFavourite();
+                        },
+                        child: isFavourite
+                            ? Icon(
+                                Icons.star_rate_rounded,
+                                color: Colors.yellow,
+                                size: 40,
+                              )
+                            : Icon(
+                                Icons.star_border_rounded,
+                                size: 40,
+                              )),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          showdialog(false);
+                          setCart().then((value) {
+                            Navigator.pop(context);
+                            showdialog(true);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                'Product added to cart',
+                                style: SNACKBAR_TEXT_STYLE,
                               ),
+                              duration: Duration(seconds: 2),
+                            ));
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: THEME_COLOR,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Add To Cart',
+                              style: STD_TEXT_STYLE,
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                )
-              : Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 60,
-                    color: WHITE,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                      child: Row(
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                // isLiked
-                                //     ? favourites.removeFromFavourites(widget.id).then((value){
-                                //   setState(() {
-                                //     isLiked = value;
-                                //   });
-                                // })
-                                //     : favourites.addToDataBase(Favourites.constuctor(widget.id, widget.name, widget.price,widget.image,widget.description),)
-                                //     .then((value){
-                                //   Toast.show(ADDED_TO_FAVOURITES, context,duration: 1);
-                                //   setState(() {
-                                //     isLiked = value;
-                                //   });
-                                // });
-                              },
-                              child: isLiked
-                                  ? Image.asset("assets/icons/Like.png",
-                                      color: DEEP_ORANGE_COLOR)
-                                  : Image.asset("assets/icons/Like.png")),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                String toppingString = "";
-                                // for(int i=0; i<addedToppings.length; i++) {
-                                //   toppingString = toppingString + addedToppings[i].toppingName + "*";
-                                // }
-                                print(toppingString);
-                                showdialog(false);
-                                // cartITems.addToCart(
-                                //     CartITems.constructor(
-                                //       quantity.toString(),
-                                //       widget.name,
-                                //       widget.price,
-                                //       widget.image.replaceAll("\\", ""),
-                                //       addedToppings,
-                                //       actualPrice.toString(),
-                                //       widget.id.toString(),
-                                //     )
-                                // ).then((value){
-
-                                //   Navigator.pop(context);
-                                //   showdialog(true);
-                                //   //Toast.show('Added to cart', context, duration: 2);
-                                // });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: THEME_COLOR,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Add To Cart',
-                                    style: TextStyle(
-                                      fontFamily: 'GlobalFonts',
-                                      color: BLACK,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
-
-  // optionsMenu(String option, int index) {
-  //   return InkWell(
-  //     onTap: () {
-  //       setState(() {
-  //         options[index] = !options[index];
-  //         if (options[index]) {
-  //           addedToppings.add(Toppings(
-  //             toppingData[index].id,
-  //             toppingData[index].top_cat_id,
-  //             toppingData[index].toppingName,
-  //             toppingData[index].toppingPrice,
-  //           ));
-  //           print('added\n $addedToppings');
-  //           for (int i = 0; i < addedToppings.length; i++) {
-  //             print(addedToppings[i].toppingName);
-  //           }
-  //         } else {
-  //           print(addedToppings.length);
-  //           print("index : $index");
-  //           for (int i = 0; i < addedToppings.length; i++) {
-  //             if (addedToppings[i].id == toppingData[index].id) {
-  //               addedToppings.removeAt(i);
-  //               print('removed');
-  //             }
-  //           }
-  //         }
-  //         // options[index]
-  //         // ? widget.price =  (double.parse(widget.price) + (quantity*2)).toString()
-  //         // : widget.price =  (double.parse(widget.price) - (quantity*2)).toString();
-  //       });
-  //     },
-  //     borderRadius: BorderRadius.circular(20),
-  //     child: Container(
-  //       height: 30,
-  //       margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-  //       decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(25),
-  //         border: Border.all(color: GREY.withOpacity(0.5), width: 1),
-  //       ),
-  //       child: Center(
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             SizedBox(
-  //               width: 15,
-  //             ),
-  //             Image.asset(
-  //               !options[index]
-  //                   ? "assets/icons/radio.png"
-  //                   : "assets/icons/radio_active.png",
-  //               height: 15,
-  //               width: 15,
-  //               fit: BoxFit.contain,
-  //               color: DEEP_ORANGE_COLOR,
-  //             ),
-  //             SizedBox(
-  //               width: 5,
-  //             ),
-  //             Text(
-  //               option,
-  //               style: TextStyle(
-  //                   fontFamily: 'GlobalFonts', color: BLACK, fontSize: 12),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   showdialog(bool isAdded) {
     return showDialog(
@@ -482,24 +260,16 @@ class _DetailsPageState extends State<DetailsPage> {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              isAdded ? 'ADDED' : 'PROCESSING',
-              style: TextStyle(
-                fontFamily: 'GlobalFonts',
-                color: BLACK,
-                fontWeight: FontWeight.bold,
-              ),
+              isAdded ? 'Added' : 'Processing',
+              style: STD_TEXT_STYLE,
             ),
             content: isAdded
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'quantity {widget.name}, SUCCESSFULLY_ADDED_TO_CART_FOR_PRICE {widget.price} CLICK_CHECKOUT_TO_GO_TO_CART',
-                        style: TextStyle(
-                          fontFamily: 'GlobalFonts',
-                          color: BLACK,
-                          fontSize: 15,
-                        ),
+                        '$quantity ${widget.product.name}, successfully added to cart',
+                        style: ALERT_TEXT_STYLE,
                       )
                     ],
                   )
@@ -516,27 +286,23 @@ class _DetailsPageState extends State<DetailsPage> {
                         Navigator.pop(context);
                       },
                       child: Text(
-                        'ADD_MORE',
-                        style: TextStyle(
-                          fontFamily: 'GlobalFonts',
-                          color: THEME_COLOR,
-                          fontWeight: FontWeight.w900,
-                        ),
+                        'Add more',
+                        style: ALERT_BUTTON_TEXT_STYLE.copyWith(
+                            color: THEME_COLOR),
                       ),
                     ),
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartPage()));
                       },
                       child: Text(
-                        'CHECKOUT',
-                        style: TextStyle(
-                          fontFamily: 'GlobalFonts',
-                          color: BLACK,
-                          fontWeight: FontWeight.w900,
-                        ),
+                        'Checkout',
+                        style: ALERT_BUTTON_TEXT_STYLE,
                       ),
                       style: TextButton.styleFrom(
                         primary: THEME_COLOR,
@@ -548,22 +314,3 @@ class _DetailsPageState extends State<DetailsPage> {
         });
   }
 }
-
-// class Toppings {
-//   String? title;
-//   String? id;
-//   String? top_cat_id;
-//   String? toppingName;
-//   String? toppingPrice;
-
-//   Toppings(this.id, this.top_cat_id, this.toppingName, this.toppingPrice);
-
-//   Toppings.title(this.title);
-
-//   Map<String, dynamic> toJson() => {
-//         'id': id,
-//         'top_cat_id': top_cat_id,
-//         'name': toppingName,
-//         'price': toppingPrice,
-//       };
-// }

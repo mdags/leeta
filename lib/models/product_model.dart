@@ -34,6 +34,8 @@ class ProductModel {
     this.updatedDate,
     this.updatedUserId,
     this.currencySymbol,
+    this.isFavourite,
+    this.cartCount,
   });
 
   int id;
@@ -58,6 +60,8 @@ class ProductModel {
   String? updatedDate;
   int? updatedUserId;
   String? currencySymbol;
+  int? isFavourite;
+  int? cartCount;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
@@ -82,6 +86,8 @@ class ProductModel {
         updatedDate: json["updated_date"] ?? "",
         updatedUserId: json["updated_user_id"],
         currencySymbol: json["currency_symbol"],
+        isFavourite: json["is_favourite"],
+        cartCount: json["cart_count"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -107,5 +113,7 @@ class ProductModel {
         "updated_date": updatedDate,
         "updated_user_id": updatedUserId,
         "currency_symbol": currencySymbol,
+        "is_favourite": isFavourite,
+        "cart_count": cartCount,
       };
 }

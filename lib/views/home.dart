@@ -5,6 +5,7 @@ import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/about_us.dart';
 import 'package:leeta/views/cart.dart';
 import 'package:leeta/views/details.dart';
+import 'package:leeta/views/login.dart';
 import 'package:leeta/views/order_history.dart';
 import 'package:leeta/views/profile.dart';
 import 'package:leeta/widgets/variables.dart';
@@ -32,7 +33,6 @@ class _HomePageState extends State<HomePage> {
   void fetchList() async {
     setState(() {
       isCategoryLoading = true;
-      isProductLoading = true;
     });
 
     try {
@@ -46,15 +46,22 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           isSelected[0] = !isSelected[0];
         });
+
+        fetchProducts(categories[0].id.toString());
       }
     } finally {
       setState(() {
         isCategoryLoading = false;
       });
     }
+  }
 
+  void fetchProducts(String catId) async {
+    setState(() {
+      isProductLoading = true;
+    });
     try {
-      var pData = await ApiProvider.fetchProducts();
+      var pData = await ApiProvider.fetchProducts(catId);
       if (pData != null) {
         setState(() {
           products = pData;
@@ -193,9 +200,11 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.w900),
                   ),
                   InkWell(
-                    onTap: () => Navigator.of(context).push(
-                        new MaterialPageRoute(
-                            builder: (context) => ProfilePage())),
+                    onTap: () => IS_LOGGED_IN
+                        ? Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (context) => ProfilePage()))
+                        : Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (context) => LoginPage())),
                     child: CircleAvatar(
                       radius: 20,
                       backgroundColor: THEME_COLOR,
@@ -296,7 +305,7 @@ class _HomePageState extends State<HomePage> {
                 isSelected[selectedItemIndex] = false;
                 selectedItemIndex = index;
                 isSelected[index] = !isSelected[index];
-                // categorySelected(id);
+                fetchProducts(id.toString());
               });
             },
             child: Container(

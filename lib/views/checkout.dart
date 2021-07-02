@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leeta/models/cart_model.dart';
+import 'package:leeta/models/order_modal.dart';
+import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/address.dart';
 import 'package:leeta/views/home.dart';
 import 'package:leeta/views/order_progress.dart';
@@ -16,7 +18,7 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   String currencySymbol = "\$";
   double subTotal = 0.0;
-  double deliveryCost = 10.0;
+  double shippingAmount = 10.0;
   bool isHomeDeliverySelected = true;
   bool isPickUpSelected = false;
   String address = "";
@@ -57,70 +59,80 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
     if (!error) {
       showdialog(true);
+      OrderModel model = new OrderModel(
+          id: 0,
+          userId: USER_ID,
+          subTotalAmount: subTotal,
+          discountAmount: 0,
+          taxAmount: 0,
+          taxPercent: 0,
+          shippingAmount: shippingAmount,
+          totalAmount: subTotal + shippingAmount,
+          totalItemCount: 0,
+          contactName: USER_NAME,
+          contactPhone: USER_GSM,
+          contactEmail: "",
+          userAddressId: 0,
+          contactAddress: address,
+          contactAreaId: "",
+          deliveryType: isHomeDeliverySelected ? "Home Delivery" : "Pickup",
+          paymentMethod: isCashSelected ? "Cash" : "Stripe",
+          paymentStatus: 0,
+          orderNote: txtNote.text,
+          transLat: 0,
+          transLng: 0,
+          deliveryPickupDate: DateTime.now().toString(),
+          createdDate: DateTime.now().toString(),
+          createdUserId: USER_ID,
+          updatedDate: DateTime.now().toString(),
+          updatedUserId: USER_ID,
+          orderDetails: <OrderDetail>[]);
+      var response = await ApiProvider.completeOrder(model);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          response.contains("err:")
+              ? response.replaceAll("err:", "")
+              : 'Order placed successfully',
+          style: SNACKBAR_TEXT_STYLE,
+        ),
+        duration: Duration(seconds: 2),
+      ));
+      Navigator.pop(context);
+      if (response.contains("err:")) {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text(
+                    'Error',
+                    style: STD_TEXT_STYLE,
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        response.replaceAll("err:", ""),
+                        style: STD_TEXT_STYLE.copyWith(
+                          fontSize: 15,
+                        ),
+                      )
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'OK',
+                        style: ALERT_BUTTON_TEXT_STYLE,
+                      ),
+                    ),
+                  ],
+                ));
+      } else {
+        showdialog(false);
+      }
     }
-    // String url = "$SERVER_ADDRESS/api/food_order";
-
-    // final response = isHomeDeliverySelected
-    //     ? await http.post(
-    //       url,
-    //       body: {
-    //       "user_id" : userId,
-    //       "name" : name,
-    //       "email" : email,
-    //       "payment_type" : isCashSelected ? "Cash" : isStripeSelected ? "Stripe" : "Paypal",
-    //         "pay_pal_paymentId" : isPaypalSelected ? tokenId : "",
-    //         "notes" : note,
-    //       "stripeToken" : isStripeSelected ? tokenId : "",
-    //       "food_desc" : food_desc,
-    //       "total_price" : (widget.price + 10.0).toString(),
-    //       "latlong" : langLat.toString(),
-    //       "token" : token,
-    //       "delivery_charges" : "10",
-    //       "delivery_mode" : "0",
-    //       "phone_no" : phone,
-    //       "address" : address.toString(),
-    //       "city" : selectedCity,
-    //       "subtotal" : widget.price.toString()
-    //     })
-    //     : await http.post(
-    //       url,
-    //       body: {
-    //       "user_id" : userId,
-    //       "name" : name,
-    //       "email" : email,
-    //         "stripeToken" : stripeToken,
-    //         "payment_type" : isCashSelected ? "Cash" : isStripeSelected ? "Stripe" : "Paypal",
-    //         "pay_pal_paymentId" : isPaypalSelected ? tokenId : "",
-    //       "notes" : note,
-    //       "food_desc": food_desc,
-    //         "total_price" : widget.price.toString(),
-    //         "latlong" : "null",
-    //       "token" : token,
-    //       "delivery_charges" : "0",
-    //       "delivery_mode" : "1",
-    //       "phone_no" : phone,
-    //       "pickup_order_time" : "${DateTime.now().hour.toString()}:${DateTime.now().minute.toString()}",
-    //       "city" : selectedCity,
-    //       "subtotal" : widget.price.toString()
-    //     });
-
-    // print(response.statusCode);
-    // print(response.body);
-    // if(response.statusCode == 200){
-    //   final jsonResponse = convert.jsonDecode(response.body);
-    //   if(jsonResponse['success'] == "0"){
-    //     Toast.show(jsonResponse["msg"], context,duration: 2);
-    //     Navigator.pop(context);
-    //   }else{
-    //     //Toast.show("Order Placed Successfully", context,duration: 2);
-    //     setState(() {
-    //       order_id = jsonResponse['order_id'].toString();
-    //     });
-    //     await cartITems.deleteDatabase();
-    //     Navigator.pop(context);
-    //     showdialog(false);
-    //   }
-    // }
   }
 
   @override
@@ -182,7 +194,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           Text(
                             isHomeDeliverySelected
                                 ? currencySymbol +
-                                    deliveryCost.toStringAsFixed(2)
+                                    shippingAmount.toStringAsFixed(2)
                                 : currencySymbol + '0',
                             style: STD_TEXT_STYLE.copyWith(fontSize: 14),
                           )
@@ -203,7 +215,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           Text(
                             isHomeDeliverySelected
                                 ? currencySymbol +
-                                    (subTotal + deliveryCost).toStringAsFixed(2)
+                                    (subTotal + shippingAmount)
+                                        .toStringAsFixed(2)
                                 : currencySymbol + subTotal.toStringAsFixed(2),
                             style: STD_TEXT_STYLE.copyWith(
                                 color: GREY,

@@ -1,5 +1,6 @@
 import 'package:leeta/models/cart_model.dart';
 import 'package:leeta/models/category_model.dart';
+import 'package:leeta/models/order_modal.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:leeta/widgets/variables.dart';
@@ -133,6 +134,21 @@ class ApiProvider {
           'Accept': 'application/json',
           //'Authorization': 'bearer ' + TOKEN_KEY!
         });
+    if (response.statusCode == 200) {
+      return response.body.split('"').join('');
+    } else {
+      return "err:Servis çağırılamadı.";
+    }
+  }
+
+  static Future<String> completeOrder(OrderModel model) async {
+    var response = await client.post(Uri.parse(url + '/CompleteOrder'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          // 'Authorization': 'bearer ' + Variables.accessToken
+        },
+        body: orderModelToJsonSingle(model));
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {

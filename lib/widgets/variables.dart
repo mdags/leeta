@@ -31,7 +31,7 @@ const INPUT_TEXT_STYLE = TextStyle(
     fontFamily: 'GlobalFonts', color: BLACK, fontWeight: FontWeight.bold);
 const SNACKBAR_TEXT_STYLE = TextStyle(
   fontFamily: 'GlobalFonts',
-  color: BLACK,
+  color: WHITE,
 );
 const ALERT_TEXT_STYLE = TextStyle(
   fontFamily: 'GlobalFonts',

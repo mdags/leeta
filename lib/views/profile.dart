@@ -100,7 +100,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     }),
                     cardItemWidget(Icons.location_pin, "My Address\n", () {
                       Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (context) => AddressPage()));
+                          builder: (context) => AddressPage(
+                                isReturn: false,
+                              )));
                     }),
                     cardItemWidget(Icons.password, "Change\nPassword", () {
                       Navigator.of(context).push(new MaterialPageRoute(
@@ -113,11 +115,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     cardItemWidget(
                         Icons.support_agent_outlined, "Support\n", () {}),
                     cardItemWidget(Icons.logout, "Log\nOut", () {
-                      // setState(() {
-                      //   Variables.memberId = null;
-                      //   Variables.nameSurname = null;
-                      // });
-                      // Navigator.pushReplacementNamed(context, '/home');
+                      setState(() {
+                        USER_ID = 0;
+                        IS_LOGGED_IN = false;
+                      });
+                      Navigator.pop(context);
                     }),
                   ],
                 ),

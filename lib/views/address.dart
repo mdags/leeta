@@ -4,7 +4,8 @@ import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class AddressPage extends StatefulWidget {
-  const AddressPage({Key? key}) : super(key: key);
+  final bool isReturn;
+  const AddressPage({Key? key, required this.isReturn}) : super(key: key);
 
   @override
   _AddressPageState createState() => _AddressPageState();
@@ -101,7 +102,9 @@ class _AddressPageState extends State<AddressPage> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.pop(context, list[index]);
+                                      if (widget.isReturn) {
+                                        Navigator.pop(context, list[index]);
+                                      }
                                     },
                                     child: Column(
                                       crossAxisAlignment:

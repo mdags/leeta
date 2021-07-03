@@ -47,7 +47,7 @@ const ALERT_BUTTON_TEXT_STYLE = TextStyle(
 // ignore: non_constant_identifier_names
 bool IS_LOGGED_IN = true;
 // ignore: non_constant_identifier_names
-String? TOKEN_KEY;
+String? ACCESS_TOKEN;
 // ignore: non_constant_identifier_names
 int USER_ID = 1; //0;
 // ignore: non_constant_identifier_names

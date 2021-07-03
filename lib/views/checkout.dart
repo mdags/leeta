@@ -389,10 +389,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           TextButton.icon(
                               onPressed: () async {
                                 AddedLocations selectedAddress =
-                                    await Navigator.of(context).push(
-                                        new MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddressPage()));
+                                    await Navigator.of(context)
+                                        .push(new MaterialPageRoute(
+                                            builder: (context) => AddressPage(
+                                                  isReturn: true,
+                                                )));
                                 setState(() {
                                   address = selectedAddress.addressLine;
                                   error = false;
@@ -415,9 +416,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       InkWell(
                         onTap: () async {
                           AddedLocations? selectedAddress =
-                              await Navigator.of(context).push(
-                                  new MaterialPageRoute(
-                                      builder: (context) => AddressPage()));
+                              await Navigator.of(context)
+                                  .push(new MaterialPageRoute(
+                                      builder: (context) => AddressPage(
+                                            isReturn: true,
+                                          )));
                           if (selectedAddress != null) {
                             setState(() {
                               address = selectedAddress.addressLine;

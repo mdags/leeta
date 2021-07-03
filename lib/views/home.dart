@@ -4,7 +4,9 @@ import 'package:leeta/models/product_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/about_us.dart';
 import 'package:leeta/views/cart.dart';
+import 'package:leeta/views/categories.dart';
 import 'package:leeta/views/details.dart';
+import 'package:leeta/views/favourites.dart';
 import 'package:leeta/views/login.dart';
 import 'package:leeta/views/order_history.dart';
 import 'package:leeta/views/profile.dart';
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   void fetchList() async {
     setState(() {
       isCategoryLoading = true;
+      isProductLoading = true;
     });
 
     try {
@@ -57,9 +60,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void fetchProducts(String catId) async {
-    setState(() {
-      isProductLoading = true;
-    });
+    if (!isProductLoading) {
+      setState(() {
+        isProductLoading = true;
+      });
+    }
     try {
       var pData = await ApiProvider.fetchProducts(catId);
       if (pData != null) {
@@ -111,6 +116,10 @@ class _HomePageState extends State<HomePage> {
               elevation: 0.0,
               onTap: (index) {
                 switch (index) {
+                  case 0:
+                    Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (context) => CategoriesPage()));
+                    break;
                   case 1:
                     Navigator.of(context).push(new MaterialPageRoute(
                         builder: (context) => CartPage()));
@@ -121,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                     break;
                   case 3:
                     Navigator.of(context).push(new MaterialPageRoute(
-                        builder: (context) => AboutUsPage()));
+                        builder: (context) => FavouritesPage()));
                     break;
                   default:
                 }
@@ -156,13 +165,13 @@ class _HomePageState extends State<HomePage> {
                     label: 'Order History'),
                 BottomNavigationBarItem(
                     icon: Image.asset(
-                      "assets/icons/5.png",
+                      "assets/icons/4.png",
                       height: 25,
                       width: 25,
                       color: BLACK,
                       fit: BoxFit.contain,
                     ),
-                    label: 'About Us'),
+                    label: 'Favourites'),
               ],
             )),
       ),
@@ -243,19 +252,26 @@ class _HomePageState extends State<HomePage> {
                 // SizedBox(
                 //   height: 15,
                 // ),
-                Container(
-                  height: 110,
-                  child: ListView.builder(
-                    itemCount: categories.length,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return category(categories[index].imgPath!,
-                          categories[index].name, index, categories[index].id);
-                    },
-                  ),
-                ),
+                isCategoryLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Container(
+                        height: 110,
+                        child: ListView.builder(
+                          itemCount: categories.length,
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return category(
+                                categories[index].imgPath!,
+                                categories[index].name,
+                                index,
+                                categories[index].id);
+                          },
+                        ),
+                      ),
                 SizedBox(
                   height: 15,
                 ),
@@ -295,70 +311,66 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget category(String imagePath, String name, int index, int id) {
-    return isCategoryLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : InkWell(
-            onTap: () {
-              setState(() {
-                isSelected[selectedItemIndex] = false;
-                selectedItemIndex = index;
-                isSelected[index] = !isSelected[index];
-                fetchProducts(id.toString());
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.all(5),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      isSelected[index]
-                          ? "assets/images/active.png"
-                          : "assets/images/un_active.png",
-                      height: 120,
-                      width: 70,
-                      //color: isSelected[index] ? THEME_COLOR : Colors.transparent,
-                    ),
-                  ),
-                  Container(
-                    height: 120,
-                    width: 70,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.network(
-                            imagePath,
-                            height: 25,
-                            width: 25,
-                            // placeholder: (context, url) => Icon(
-                            //   Icons.image,
-                            //   color: LIGHT_GREY,
-                            // ),
-                            // errorWidget: (context, url, error) =>
-                            //     Icon(Icons.error),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              name,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: BLACK,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w900),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+    return InkWell(
+      onTap: () {
+        setState(() {
+          isSelected[selectedItemIndex] = false;
+          selectedItemIndex = index;
+          isSelected[index] = !isSelected[index];
+          fetchProducts(id.toString());
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.all(5),
+        child: Stack(
+          children: [
+            Center(
+              child: Image.asset(
+                isSelected[index]
+                    ? "assets/images/active.png"
+                    : "assets/images/un_active.png",
+                height: 120,
+                width: 70,
+                //color: isSelected[index] ? THEME_COLOR : Colors.transparent,
               ),
             ),
-          );
+            Container(
+              height: 120,
+              width: 70,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.network(
+                      imagePath,
+                      height: 25,
+                      width: 25,
+                      // placeholder: (context, url) => Icon(
+                      //   Icons.image,
+                      //   color: LIGHT_GREY,
+                      // ),
+                      // errorWidget: (context, url, error) =>
+                      //     Icon(Icons.error),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: BLACK,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget productCard(ProductModel product) {

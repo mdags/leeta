@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:leeta/models/order_modal.dart';
+import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/order_progress.dart';
 import 'package:leeta/widgets/variables.dart';
 
@@ -10,18 +12,32 @@ class OrderHistoryPage extends StatefulWidget {
 }
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
-  var list = <BookOrderClass>[];
-  String? userId;
+  var list = <OrderModel>[];
+  bool isLoading = true;
+  // String? userId;
   //List<String> orderStatus = List();
-  OrderProcessClass? orderProcessClass;
-  bool loading = true;
+  // OrderProcessClass? orderProcessClass;
+
+  void fetchList() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      var data = await ApiProvider.fetchorders();
+      if (data != null) {
+        list = data;
+      }
+    } finally {
+      setState(() {
+        isLoading = true;
+      });
+    }
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    list.add(new BookOrderClass('77', '118.25', '1', '7th Ave & W 48th St,',
-        'Home Delivert', 'Preparing'));
+    fetchList();
   }
 
   @override
@@ -79,7 +95,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "Order No.: ${list[index].order_no}",
+                                                    "Order No.: " +
+                                                        list[index]
+                                                            .id
+                                                            .toString(),
                                                     style: TextStyle(
                                                       fontFamily: 'GlobalFonts',
                                                       color: BLACK,
@@ -92,8 +111,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                                     height: 10,
                                                   ),
                                                   Text(
-                                                    double.parse(list[index]
-                                                            .total_amount)
+                                                    list[index]
+                                                        .totalAmount!
                                                         .toStringAsFixed(2),
                                                     style: TextStyle(
                                                         fontFamily:
@@ -105,34 +124,34 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                height: 30,
-                                                width: 100,
-                                                //margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    border: Border.all(
-                                                        color: GREY)),
-                                                child: Center(
-                                                    child: Text(
-                                                  list[index].orderStatus ?? "",
-                                                  style: TextStyle(
-                                                      fontFamily: 'GlobalFonts',
-                                                      color: BLACK,
-                                                      fontSize: 12),
-                                                )),
-                                              ),
+                                              // Container(
+                                              //   height: 30,
+                                              //   width: 100,
+                                              //   //margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                              //   decoration: BoxDecoration(
+                                              //       borderRadius:
+                                              //           BorderRadius.circular(
+                                              //               15),
+                                              //       border: Border.all(
+                                              //           color: GREY)),
+                                              //   child: Center(
+                                              //       child: Text(
+                                              //     list[index].orderStatus ?? "",
+                                              //     style: TextStyle(
+                                              //         fontFamily: 'GlobalFonts',
+                                              //         color: BLACK,
+                                              //         fontSize: 12),
+                                              //   )),
+                                              // ),
                                             ],
                                           ),
                                           SizedBox(
                                             height: 15,
                                           ),
                                           Text(
-                                            list[index].address == null
+                                            list[index].contactAddress == null
                                                 ? 'Pickup Order'
-                                                : list[index].address!,
+                                                : list[index].contactAddress!,
                                             style: TextStyle(
                                               fontFamily: 'GlobalFonts',
                                               color: GREY,

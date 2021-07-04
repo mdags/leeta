@@ -97,15 +97,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
           Navigator.of(context).push(new MaterialPageRoute(
               builder: (context) => DetailsPage(product: product)));
         }
-        // bool res = await Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsPage(
-        //     "",
-        //     "",
-        //     "",
-        //     "",
-        //     list[i].id)));
-        // if(res!= null && res){
-        //   read();
-        // }
       },
       child: Container(
         decoration: BoxDecoration(

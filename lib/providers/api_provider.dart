@@ -186,4 +186,18 @@ class ApiProvider {
       return null;
     }
   }
+
+  static Future<List<OrderModel>?> fetchorders() async {
+    var response = await client.get(
+        Uri.parse(url + '/GetOrders?userId=' + USER_ID.toString()),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      return orderModelFromJson(response.body);
+    } else {
+      return null;
+    }
+  }
 }

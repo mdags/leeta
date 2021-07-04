@@ -152,6 +152,11 @@ class OrderDetail {
     this.createdUserId,
     this.updatedDate,
     this.updatedUserId,
+    required this.productName,
+    required this.productImgPath,
+    required this.shopName,
+    required this.currencySymbol,
+    required this.orderStatusName,
   });
 
   int id;
@@ -168,6 +173,11 @@ class OrderDetail {
   int? createdUserId;
   String? updatedDate;
   int? updatedUserId;
+  String productName;
+  String productImgPath;
+  String shopName;
+  String currencySymbol;
+  String orderStatusName;
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
         id: json["id"],
@@ -184,6 +194,11 @@ class OrderDetail {
         createdUserId: json["created_user_id"],
         updatedDate: json["updated_date"] ?? "",
         updatedUserId: json["updated_user_id"],
+        productName: json["product_name"] ?? "",
+        productImgPath: json["product_img_path"] ?? "",
+        shopName: json["shop_name"] ?? "",
+        currencySymbol: json["currency_symbol"] ?? "",
+        orderStatusName: json["order_status_name"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -201,5 +216,10 @@ class OrderDetail {
         "created_user_id": createdUserId,
         "updated_date": updatedDate,
         "updated_user_id": updatedUserId,
+        "product_name": productName,
+        "product_img_path": productImgPath,
+        "shop_name": shopName,
+        "currency_symbol": currencySymbol,
+        "order_status_name": orderStatusName,
       };
 }

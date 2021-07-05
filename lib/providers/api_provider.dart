@@ -1,3 +1,4 @@
+import 'package:leeta/models/address_model.dart';
 import 'package:leeta/models/cart_model.dart';
 import 'package:leeta/models/category_model.dart';
 import 'package:leeta/models/favourite_model.dart';
@@ -187,7 +188,7 @@ class ApiProvider {
     }
   }
 
-  static Future<List<OrderModel>?> fetchorders() async {
+  static Future<List<OrderModel>?> fetchOrders() async {
     var response = await client.get(
         Uri.parse(url + '/GetOrders?userId=' + USER_ID.toString()),
         headers: {
@@ -198,6 +199,53 @@ class ApiProvider {
       return orderModelFromJson(response.body);
     } else {
       return null;
+    }
+  }
+
+  static Future<List<AddressModel>?> fetchAddress() async {
+    var response = await client.get(
+        Uri.parse(url + '/GetAddress?userId=' + USER_ID.toString()),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      return addressModelFromJson(response.body);
+    } else {
+      return null;
+    }
+  }
+
+  static Future<String> addAddress(String adrName, String fullAddress) async {
+    var response = await client.get(
+        Uri.parse(url +
+            '/AddAddress?userId=' +
+            USER_ID.toString() +
+            '&adrName=' +
+            adrName +
+            '&fullAddress=' +
+            fullAddress),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      return response.body.split('"').join('');
+    } else {
+      return "err:Servis çağırılamadı.";
+    }
+  }
+
+  static Future<String> delAddress(String id) async {
+    var response = await client.get(Uri.parse(url + '/DelAddress?id=' + id),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      return response.body.split('"').join('');
+    } else {
+      return "err:Servis çağırılamadı.";
     }
   }
 }

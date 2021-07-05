@@ -15,21 +15,12 @@ class SideMenu extends StatefulWidget {
 
 class _SideMenuState extends State<SideMenu> {
   int totalCartItems = 0;
-  // CartITems cartITems = CartITems();
   bool isLoggedIn = false;
   String name = "";
   String email = "";
   String userId = "";
   String bookOrderLength = '0';
   String vehicalNumber = "";
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    //read();
-    //getMessages();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +111,7 @@ class _SideMenuState extends State<SideMenu> {
                                     icon:
                                         Icon(Icons.power_settings_new_rounded),
                                     onPressed: () {
-                                      showdialog2();
+                                      logOutDialog();
                                     })
                               ],
                             ),
@@ -320,122 +311,13 @@ class _SideMenuState extends State<SideMenu> {
                 ),
               ),
             ),
-            userId == null
-                ? Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: InkWell(
-                        onTap: () {
-                          // Navigator.push(context,
-                          //   MaterialPageRoute(builder: (context) => LoginAsDeliveryBoy()),
-                          // );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 65,
-                              width: 65,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(35),
-                                  border: Border.all(color: GREY)),
-                              child: Center(
-                                child: Image.asset(
-                                  "assets/icons/login.png",
-                                  height: 30,
-                                  width: 30,
-                                  fit: BoxFit.contain,
-                                  color: BLACK,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              "LOGIN_AS_DELIVERY_BOY",
-                              style: TextStyle(
-                                fontFamily: 'GlobalFonts',
-                                color: BLACK,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                : Container(),
           ],
         ),
       ),
     );
   }
 
-  showdialog() {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'ALERT',
-              style: TextStyle(
-                fontFamily: 'GlobalFonts',
-                color: BLACK,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'SIDEMENU_DIALOG_TEXT',
-                  style: TextStyle(
-                    fontFamily: 'GlobalFonts',
-                    color: BLACK,
-                    fontSize: 15,
-                  ),
-                )
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'No',
-                  style: TextStyle(
-                    fontFamily: 'GlobalFonts',
-                    color: THEME_COLOR,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginAsCustomer()));
-                },
-                child: Text(
-                  'YES',
-                  style: TextStyle(
-                    fontFamily: 'GlobalFonts',
-                    color: BLACK,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                style: TextButton.styleFrom(
-                  primary: THEME_COLOR,
-                ),
-              ),
-            ],
-          );
-        });
-  }
-
-  showdialog2() {
+  logOutDialog() {
     return showDialog(
         context: context,
         builder: (context) {

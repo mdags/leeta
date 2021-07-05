@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leeta/models/address_model.dart';
 import 'package:leeta/models/cart_model.dart';
 import 'package:leeta/models/order_modal.dart';
 import 'package:leeta/providers/api_provider.dart';
@@ -86,7 +87,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           createdUserId: USER_ID,
           updatedDate: DateTime.now().toString(),
           updatedUserId: USER_ID,
-          orderDetails: <OrderDetail>[]);
+          orderDetails: <OrderDetailModel>[]);
       var response = await ApiProvider.completeOrder(model);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -388,14 +389,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         children: [
                           TextButton.icon(
                               onPressed: () async {
-                                AddedLocations selectedAddress =
+                                AddressModel selectedAddress =
                                     await Navigator.of(context)
                                         .push(new MaterialPageRoute(
                                             builder: (context) => AddressPage(
                                                   isReturn: true,
                                                 )));
                                 setState(() {
-                                  address = selectedAddress.addressLine;
+                                  address = selectedAddress.fullAddress;
                                   error = false;
                                 });
                               },
@@ -415,7 +416,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                       InkWell(
                         onTap: () async {
-                          AddedLocations? selectedAddress =
+                          AddressModel? selectedAddress =
                               await Navigator.of(context)
                                   .push(new MaterialPageRoute(
                                       builder: (context) => AddressPage(
@@ -423,7 +424,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           )));
                           if (selectedAddress != null) {
                             setState(() {
-                              address = selectedAddress.addressLine;
+                              address = selectedAddress.fullAddress;
                               error = false;
                             });
                           }
@@ -646,7 +647,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Your order has been placed successfully. Would you like to check Order progress?',
+                        'Your order has been placed successfully.',
                         style: STD_TEXT_STYLE.copyWith(
                           fontSize: 15,
                         ),
@@ -667,30 +668,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 builder: (context) => HomePage()));
                       },
                       child: Text(
-                        'NO',
+                        'OK',
                         style: ALERT_BUTTON_TEXT_STYLE,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OrderProgressPage(
-                                      id: "0",
-                                    )));
-                      },
-                      child: Text(
-                        'YES',
-                        style: ALERT_BUTTON_TEXT_STYLE,
-                      ),
-                      style: TextButton.styleFrom(
-                        primary: THEME_COLOR,
-                      ),
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     Navigator.pop(context);
+                    //     Navigator.pop(context);
+                    //     Navigator.pop(context);
+                    //     Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) => OrderProgressPage(
+                    //                   order: null,
+                    //                 )));
+                    //   },
+                    //   child: Text(
+                    //     'YES',
+                    //     style: ALERT_BUTTON_TEXT_STYLE,
+                    //   ),
+                    //   style: TextButton.styleFrom(
+                    //     primary: THEME_COLOR,
+                    //   ),
+                    // ),
                   ],
           );
         });

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:leeta/models/category_model.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:leeta/providers/api_provider.dart';
-import 'package:leeta/views/about_us.dart';
 import 'package:leeta/views/cart.dart';
 import 'package:leeta/views/categories.dart';
 import 'package:leeta/views/details.dart';

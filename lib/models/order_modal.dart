@@ -38,7 +38,7 @@ class OrderModel {
     this.transLat,
     this.transLng,
     this.deliveryPickupDate,
-    this.createdDate,
+    required this.createdDate,
     this.createdUserId,
     this.updatedDate,
     this.updatedUserId,
@@ -64,14 +64,14 @@ class OrderModel {
   String? paymentMethod;
   int? paymentStatus;
   String? orderNote;
-  int? transLat;
-  int? transLng;
+  double? transLat;
+  double? transLng;
   String? deliveryPickupDate;
-  String? createdDate;
+  String createdDate;
   int? createdUserId;
   String? updatedDate;
   int? updatedUserId;
-  List<OrderDetail>? orderDetails;
+  List<OrderDetailModel>? orderDetails;
 
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         id: json["id"],
@@ -100,8 +100,8 @@ class OrderModel {
         createdUserId: json["created_user_id"],
         updatedDate: json["updated_date"] ?? "",
         updatedUserId: json["updated_user_id"],
-        orderDetails: List<OrderDetail>.from(
-            json["order_details"].map((x) => OrderDetail.fromJson(x))),
+        orderDetails: List<OrderDetailModel>.from(
+            json["order_details"].map((x) => OrderDetailModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -136,8 +136,8 @@ class OrderModel {
       };
 }
 
-class OrderDetail {
-  OrderDetail({
+class OrderDetailModel {
+  OrderDetailModel({
     required this.id,
     required this.orderId,
     required this.orderStatusId,
@@ -152,11 +152,16 @@ class OrderDetail {
     this.createdUserId,
     this.updatedDate,
     this.updatedUserId,
-    required this.productName,
-    required this.productImgPath,
-    required this.shopName,
-    required this.currencySymbol,
-    required this.orderStatusName,
+    this.productName,
+    this.productImgPath,
+    this.shopName,
+    this.currencySymbol,
+    this.orderStatusName,
+    this.acceptedDate,
+    this.preparingDate,
+    this.arrivingDate,
+    this.deliveredDate,
+    this.cancelledDate,
   });
 
   int id;
@@ -173,13 +178,19 @@ class OrderDetail {
   int? createdUserId;
   String? updatedDate;
   int? updatedUserId;
-  String productName;
-  String productImgPath;
-  String shopName;
-  String currencySymbol;
-  String orderStatusName;
+  String? productName;
+  String? productImgPath;
+  String? shopName;
+  String? currencySymbol;
+  String? orderStatusName;
+  String? acceptedDate;
+  String? preparingDate;
+  String? arrivingDate;
+  String? deliveredDate;
+  String? cancelledDate;
 
-  factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
+  factory OrderDetailModel.fromJson(Map<String, dynamic> json) =>
+      OrderDetailModel(
         id: json["id"],
         orderId: json["order_id"],
         orderStatusId: json["order_status_id"],
@@ -199,6 +210,11 @@ class OrderDetail {
         shopName: json["shop_name"] ?? "",
         currencySymbol: json["currency_symbol"] ?? "",
         orderStatusName: json["order_status_name"] ?? "",
+        acceptedDate: json["accepted_date"] ?? "",
+        preparingDate: json["preparing_date"] ?? "",
+        arrivingDate: json["arriving_date"] ?? "",
+        deliveredDate: json["delivered_date"] ?? "",
+        cancelledDate: json["cancelled_date"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -221,5 +237,10 @@ class OrderDetail {
         "shop_name": shopName,
         "currency_symbol": currencySymbol,
         "order_status_name": orderStatusName,
+        "accepted_date": acceptedDate,
+        "preparing_date": preparingDate,
+        "arriving_date": arrivingDate,
+        "delivered_date": deliveredDate,
+        "cancelled_date": cancelledDate,
       };
 }

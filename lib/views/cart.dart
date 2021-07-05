@@ -15,7 +15,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   var list = <CartModel>[];
   bool isLoading = false;
-  String currencySymbol = "\$";
+  String currencySymbol = "";
   double totalAmount = 0.0;
   bool isLoggedIn = false;
 

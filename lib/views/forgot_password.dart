@@ -115,10 +115,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       Row(
                         children: [
                           Expanded(
-                            child: FlatButton(
-                              padding: EdgeInsets.all(13),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25)),
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.all(13),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25)),
+                                primary: THEME_COLOR,
+                              ),
                               onPressed: () {
                                 sendMain();
                               },
@@ -130,7 +133,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold),
                               ),
-                              color: THEME_COLOR,
                             ),
                           ),
                         ],

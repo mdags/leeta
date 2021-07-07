@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const Color WHITE = Colors.white;
 const Color BLACK = Colors.black;
@@ -54,3 +55,5 @@ int USER_ID = 1; //0;
 String USER_NAME = "Leeta";
 // ignore: non_constant_identifier_names
 String USER_GSM = "0";
+// ignore: non_constant_identifier_names
+String USER_PHOTO = "";

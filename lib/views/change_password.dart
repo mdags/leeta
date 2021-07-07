@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -10,6 +11,27 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  var _formKey = GlobalKey<FormState>();
+  var txtOldPassword = new TextEditingController();
+  var txtNewPassword = new TextEditingController();
+
+  void changePassword() async {
+    var response = await ApiProvider.changePassword(
+        txtOldPassword.text, txtNewPassword.text);
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: response.contains("err:") ? Text("Error") : Text("Done"),
+              content: response.contains("err:")
+                  ? Text(response.replaceAll("err:", ""))
+                  : Text("Your password has been changed successfully."),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context), child: Text("OK"))
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,80 +54,93 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     SizedBox(
                       height: 60,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'Old Password',
-                          style: GoogleFonts.comfortaa(
-                              fontSize: 17, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'Enter',
-                          style: GoogleFonts.comfortaa(
-                              fontSize: 13, color: Colors.grey.shade600),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Divider(
-                          thickness: 0.5,
-                          height: 20,
-                          color: Colors.grey.shade700,
-                        ),
-                        Text(
-                          'New Password',
-                          style: GoogleFonts.comfortaa(
-                              fontSize: 17, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'Enter',
-                          style: GoogleFonts.comfortaa(
-                              fontSize: 13, color: Colors.grey.shade600),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Divider(
-                          thickness: 0.5,
-                          height: 20,
-                          color: Colors.grey.shade700,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.all(13),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  backgroundColor: THEME_COLOR,
-                                ),
-                                onPressed: () {
-                                  // loginInto();
-                                },
-                                child: Text(
-                                  'Change Password',
-                                  style: TextStyle(
-                                      fontFamily: 'GlobalFonts',
-                                      color: BLACK,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            controller: txtOldPassword,
+                            decoration: InputDecoration(
+                              labelText: 'Enter Old Password',
+                              labelStyle: TextStyle(
+                                  fontFamily: 'GlobalFonts',
+                                  color: GREY,
+                                  fontWeight: FontWeight.bold),
+                              border: UnderlineInputBorder(),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: GREY)),
+                            ),
+                            style: TextStyle(
+                                fontFamily: 'GlobalFonts',
+                                color: BLACK,
+                                fontWeight: FontWeight.bold),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          TextFormField(
+                            controller: txtNewPassword,
+                            decoration: InputDecoration(
+                              labelText: 'Enter New Password',
+                              labelStyle: TextStyle(
+                                  fontFamily: 'GlobalFonts',
+                                  color: GREY,
+                                  fontWeight: FontWeight.bold),
+                              border: UnderlineInputBorder(),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: GREY)),
+                            ),
+                            style: TextStyle(
+                                fontFamily: 'GlobalFonts',
+                                color: BLACK,
+                                fontWeight: FontWeight.bold),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.all(13),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
+                                    backgroundColor: THEME_COLOR,
+                                  ),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      changePassword();
+                                    }
+                                  },
+                                  child: Text(
+                                    'Change Password',
+                                    style: TextStyle(
+                                        fontFamily: 'GlobalFonts',
+                                        color: BLACK,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        )
-                      ],
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),

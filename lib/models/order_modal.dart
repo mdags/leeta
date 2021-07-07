@@ -12,6 +12,7 @@ String orderModelToJson(List<OrderModel> data) =>
 
 List<OrderModel> orderModelFromJsonSingle(String str) =>
     json.decode(str).map((x) => OrderModel.fromJson(x));
+
 String orderModelToJsonSingle(OrderModel data) => json.encode(data.toJson());
 
 class OrderModel {

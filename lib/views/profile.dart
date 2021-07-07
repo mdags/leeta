@@ -1,4 +1,6 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/address.dart';
 import 'package:leeta/views/change_password.dart';
 import 'package:leeta/views/my_profile.dart';
@@ -12,6 +14,26 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  void pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      PlatformFile? file = result.files.first;
+
+      print(file.name);
+      print(file.bytes);
+      print(file.size);
+      print(file.extension);
+      print(file.path);
+
+      var response = await ApiProvider.uploadProfilePhoto(file.path.toString());
+      setState(() {
+        USER_PHOTO = "http://leeta.akillisirketler.com/uploads/" + file.name;
+      });
+    } else {
+      print('User canceled the picker');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,20 +49,43 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 40,
                 ),
-                CircleAvatar(
-                  radius: 40 + 4.0,
-                  backgroundColor: THEME_COLOR,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.transparent,
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 70,
+                      backgroundColor: THEME_COLOR,
+                      child: ClipOval(
+                        child: USER_PHOTO.isNotEmpty
+                            ? Image.network(
+                                USER_PHOTO,
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.fill,
+                              )
+                            : Icon(
+                                Icons.account_circle,
+                                size: 150,
+                                color: BLACK,
+                              ),
+                      ),
                     ),
-                    child: Icon(
-                      Icons.account_circle,
-                      size: 80,
-                      color: BLACK,
-                    ),
-                  ),
+                    Positioned(
+                        bottom: 1,
+                        right: 1,
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          child: IconButton(
+                            icon: Icon(Icons.add_a_photo),
+                            color: Colors.white,
+                            onPressed: () => pickFile(),
+                          ),
+                          decoration: BoxDecoration(
+                              color: DEEP_ORANGE_COLOR,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                        )),
+                  ],
                 ),
                 // CircleAvatar(
                 //   radius: 40 + 4.0,
@@ -72,12 +117,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              'User Name',
+                              USER_NAME,
                               style: Theme.of(context).textTheme.headline6,
                             ),
                             const SizedBox(height: 10.0),
                             Text(
-                              'Gsm',
+                              USER_GSM,
                               style: Theme.of(context).textTheme.subtitle1,
                             ),
                           ],

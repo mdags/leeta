@@ -5,7 +5,6 @@ import 'package:leeta/models/order_modal.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/address.dart';
 import 'package:leeta/views/home.dart';
-import 'package:leeta/views/order_progress.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class CheckoutPage extends StatefulWidget {

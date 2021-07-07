@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:leeta/models/user_model.dart';
+import 'package:leeta/providers/api_provider.dart';
+import 'package:leeta/widgets/variables.dart';
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({Key? key}) : super(key: key);
@@ -9,102 +12,195 @@ class MyProfilePage extends StatefulWidget {
 }
 
 class _MyProfilePageState extends State<MyProfilePage> {
+  var _formKey = GlobalKey<FormState>();
+  var txtName = new TextEditingController();
+  var txtGsm = new TextEditingController();
+  var txtEmail = new TextEditingController();
+  bool isLoading = false;
+
+  void getProfile() async {
+    var data = await ApiProvider.getProfile();
+    if (data != null) {
+      txtName.text = data.userName;
+      txtGsm.text = data.userPhone;
+      txtEmail.text = data.userEmail!;
+    }
+  }
+
+  void updateProfile() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      UserModel model = new UserModel(
+          userId: USER_ID, userName: txtName.text, userPhone: txtGsm.text);
+      var response = await ApiProvider.updateProfile(model);
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: response.contains("err:") ? Text("Error") : Text("Done"),
+                content: response.contains("err:")
+                    ? Text(response.replaceAll("err:", ""))
+                    : Text("Your profile has been updated successfully."),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("OK"))
+                ],
+              ));
+      print(response);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 50),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: AppBar(
+        title: Text(
+          'My Profile',
+        ),
+        elevation: 0.0,
+        leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(Icons.arrow_back_ios_new)),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Basic Information',
+                  style: GoogleFonts.comfortaa(fontSize: 15),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                TextFormField(
+                  controller: txtName,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    labelStyle: TextStyle(
+                        fontFamily: 'GlobalFonts',
+                        color: GREY,
+                        fontWeight: FontWeight.bold),
+                    border: UnderlineInputBorder(),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: GREY)),
+                  ),
+                  style: TextStyle(
+                      fontFamily: 'GlobalFonts',
+                      color: BLACK,
+                      fontWeight: FontWeight.bold),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                TextFormField(
+                  controller: txtGsm,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                      labelText: 'Mobile Number',
+                      labelStyle: TextStyle(
+                          fontFamily: 'GlobalFonts',
+                          color: GREY,
+                          fontWeight: FontWeight.bold),
+                      border: UnderlineInputBorder(),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: GREY))),
+                  style: TextStyle(
+                      fontFamily: 'GlobalFonts',
+                      color: BLACK,
+                      fontWeight: FontWeight.bold),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                TextFormField(
+                  controller: txtEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                      labelText: 'Email Address',
+                      labelStyle: TextStyle(
+                          fontFamily: 'GlobalFonts',
+                          color: GREY,
+                          fontWeight: FontWeight.bold),
+                      border: UnderlineInputBorder(),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: GREY))),
+                  style: TextStyle(
+                      fontFamily: 'GlobalFonts',
+                      color: BLACK,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
                   children: [
-                    SizedBox(
-                      height: 60,
-                    ),
-                    Text(
-                      'Basic Information',
-                      style: GoogleFonts.comfortaa(fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 8,
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          primary: THEME_COLOR,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              45,
                             ),
-                            Text(
-                              'Name',
-                              style: GoogleFonts.comfortaa(
-                                  fontSize: 17, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'Mobile Number',
-                              style: GoogleFonts.comfortaa(
-                                  fontSize: 13, color: Colors.grey.shade600),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Divider(
-                              thickness: 0.5,
-                              height: 20,
-                              color: Colors.grey.shade700,
-                            )
-                          ],
-                        );
-                      },
+                          ),
+                          padding: EdgeInsets.all(12),
+                        ),
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                if (_formKey.currentState!.validate()) {
+                                  updateProfile();
+                                }
+                              },
+                        child: isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Text('Save',
+                                style: TextStyle(
+                                  fontFamily: 'GlobalFonts',
+                                  color: BLACK,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                )),
+                      ),
                     ),
                   ],
-                ),
-              ),
+                )
+              ],
             ),
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios_rounded,
-                      size: 17,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'My Profile',
-                    style: GoogleFonts.comfortaa(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 23),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

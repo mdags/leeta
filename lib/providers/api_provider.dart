@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:leeta/models/address_model.dart';
 import 'package:leeta/models/cart_model.dart';
 import 'package:leeta/models/category_model.dart';
@@ -6,6 +8,7 @@ import 'package:leeta/models/order_modal.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:leeta/models/token_model.dart';
+import 'package:leeta/models/user_model.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class ApiProvider {
@@ -28,6 +31,72 @@ class ApiProvider {
       var token = tokenModelFromJson(response.body);
       ACCESS_TOKEN = token.accessToken;
     }
+  }
+
+  static Future<UserModel?> getProfile() async {
+    var response = await client.get(
+        Uri.parse(url + '/GetProfile?userId=' + USER_ID.toString()),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      var list = userModelFromJson(response.body);
+      if (list.length > 0)
+        return list[0];
+      else
+        return null;
+    } else {
+      return null;
+    }
+  }
+
+  static Future<String> updateProfile(UserModel model) async {
+    var response = await client.post(Uri.parse(url + '/UpdateProfile'),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        },
+        body: userModelToJsonSingle(model));
+    if (response.statusCode == 200) {
+      return response.body.split('"').join('');
+    } else {
+      return "err:Servis çağırılamadı.";
+    }
+  }
+
+  static Future<String> changePassword(oldPassword, newPassword) async {
+    var response = await client.get(
+        Uri.parse(url +
+            '/ChangePassword?userId=' +
+            USER_ID.toString() +
+            '&oldPassword=' +
+            oldPassword +
+            '&newPassword=' +
+            newPassword),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      return response.body.split('"').join('');
+    } else {
+      return "err:Servis çağırılamadı.";
+    }
+  }
+
+  static Future<String?> uploadProfilePhoto(String filename) async {
+    var request = http.MultipartRequest('POST',
+        Uri.parse(url + '/UpdateProfilePhoto?userId=' + USER_ID.toString()));
+    request.headers["Authorization"] = "bearer " + ACCESS_TOKEN!;
+    request.files.add(await http.MultipartFile.fromPath('picture', filename));
+    var response = await request.send();
+    print(response.statusCode);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
+    return response.reasonPhrase.toString();
   }
 
   static Future<List<CategoryModel>?> fetchCategories() async {

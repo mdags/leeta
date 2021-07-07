@@ -324,9 +324,17 @@ class _SignUpPageState extends State<SignUpPage> {
                         Row(
                           children: [
                             Expanded(
-                              child: RaisedButton(
-                                elevation: 0,
-                                padding: EdgeInsets.all(12),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  primary: THEME_COLOR,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      45,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.all(12),
+                                ),
                                 onPressed: () {
                                   // registerUser();
                                 },
@@ -337,12 +345,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                     )),
-                                color: THEME_COLOR,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    45,
-                                  ),
-                                ),
                               ),
                             ),
                           ],

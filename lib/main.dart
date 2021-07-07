@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/home.dart';
 import 'package:leeta/views/login.dart';
@@ -45,9 +46,8 @@ class MyApp extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 iconTheme: IconThemeData(color: BLACK),
                 textTheme: TextTheme(
-                    headline6: TextStyle(
-                        color: BLACK,
-                        fontFamily: 'GlobalFonts',
+                    headline6: GoogleFonts.comfortaa(
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 23)))),
         routes: <String, WidgetBuilder>{

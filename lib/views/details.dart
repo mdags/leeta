@@ -202,12 +202,12 @@ class _DetailsPageState extends State<DetailsPage> {
                         },
                         child: isFavourite
                             ? Icon(
-                                Icons.star_rate_rounded,
+                                Icons.favorite,
                                 color: Colors.yellow,
                                 size: 40,
                               )
                             : Icon(
-                                Icons.star_border_rounded,
+                                Icons.favorite_outline_outlined,
                                 size: 40,
                               )),
                     SizedBox(

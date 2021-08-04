@@ -134,6 +134,19 @@ class ApiProvider {
     }
   }
 
+  static Future<List<ProductModel>?> fetchProductsForSearhc() async {
+    var response = await client.get(Uri.parse(url + '/GetProductForSearch'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      return productModelFromJson(response.body);
+    } else {
+      return null;
+    }
+  }
+
   static Future<ProductModel?> getProductById(String id) async {
     var response = await client.get(
         Uri.parse(

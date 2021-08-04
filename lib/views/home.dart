@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:leeta/models/category_model.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:leeta/providers/api_provider.dart';
@@ -7,8 +8,11 @@ import 'package:leeta/views/categories.dart';
 import 'package:leeta/views/details.dart';
 import 'package:leeta/views/favourites.dart';
 import 'package:leeta/views/login.dart';
+import 'package:leeta/views/notifications.dart';
 import 'package:leeta/views/order_history.dart';
+import 'package:leeta/views/products.dart';
 import 'package:leeta/views/profile.dart';
+import 'package:leeta/views/search.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class HomePage extends StatefulWidget {
@@ -95,7 +99,8 @@ class _HomePageState extends State<HomePage> {
       // drawer: SideMenu(),
       body: bodyWidget(),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => Navigator.of(context)
+              .push(new MaterialPageRoute(builder: (context) => SearchPage())),
           child: Icon(
             Icons.search,
             size: 32,
@@ -111,13 +116,15 @@ class _HomePageState extends State<HomePage> {
             child: BottomNavigationBar(
               selectedItemColor: BLACK,
               unselectedItemColor: BLACK,
+              selectedLabelStyle: TextStyle(fontSize: 12),
+              unselectedLabelStyle: TextStyle(fontSize: 12),
               type: BottomNavigationBarType.fixed,
               elevation: 0.0,
               onTap: (index) {
                 switch (index) {
                   case 0:
                     Navigator.of(context).push(new MaterialPageRoute(
-                        builder: (context) => CategoriesPage()));
+                        builder: (context) => NotificationsPage()));
                     break;
                   case 1:
                     Navigator.of(context).push(new MaterialPageRoute(
@@ -136,39 +143,27 @@ class _HomePageState extends State<HomePage> {
               },
               items: [
                 BottomNavigationBarItem(
-                    icon: Image.asset(
-                      "assets/icons/1.png",
-                      height: 25,
-                      width: 25,
-                      color: BLACK,
-                      fit: BoxFit.contain,
+                    icon: Icon(
+                      Icons.notifications_outlined,
+                      size: 30,
                     ),
-                    label: 'Categories'),
+                    label: 'Notifications'),
                 BottomNavigationBarItem(
-                    icon: Image.asset(
-                      "assets/icons/2.png",
-                      height: 25,
-                      width: 25,
-                      color: BLACK,
-                      fit: BoxFit.contain,
+                    icon: Icon(
+                      Icons.shopping_cart_outlined,
+                      size: 30,
                     ),
                     label: 'My Cart'),
                 BottomNavigationBarItem(
-                    icon: Image.asset(
-                      "assets/icons/3.png",
-                      height: 25,
-                      width: 25,
-                      color: BLACK,
-                      fit: BoxFit.contain,
+                    icon: Icon(
+                      Icons.manage_search_outlined,
+                      size: 30,
                     ),
                     label: 'Order History'),
                 BottomNavigationBarItem(
-                    icon: Image.asset(
-                      "assets/icons/4.png",
-                      height: 25,
-                      width: 25,
-                      color: BLACK,
-                      fit: BoxFit.contain,
+                    icon: Icon(
+                      Icons.favorite_outline_outlined,
+                      size: 30,
                     ),
                     label: 'Favourites'),
               ],
@@ -241,6 +236,16 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 25,
                 ),
+                Text(
+                  "Categories",
+                  style: GoogleFonts.comfortaa(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 23),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
                 // Text(
                 //   'Leeta',
                 //   style: TextStyle(
@@ -255,49 +260,61 @@ class _HomePageState extends State<HomePage> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : Container(
-                        height: 110,
-                        child: ListView.builder(
-                          itemCount: categories.length,
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return category(
-                                categories[index].imgPath!,
-                                categories[index].name,
-                                index,
-                                categories[index].id);
-                          },
-                        ),
+                    : GridView.count(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(5),
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 5,
+                        crossAxisCount: 3,
+                        childAspectRatio: 0.8,
+                        physics: ClampingScrollPhysics(),
+                        children: List.generate(categories.length, (index) {
+                          return cardItemWidget(categories[index]);
+                        }),
                       ),
-                SizedBox(
-                  height: 15,
-                ),
-                products.length > 0
-                    ? Text(
-                        'Popular',
-                        style: TextStyle(
-                            fontFamily: 'GlobalFonts',
-                            fontSize: 15,
-                            color: BLACK,
-                            fontWeight: FontWeight.w600),
-                      )
-                    : Center(),
-                SizedBox(
-                  height: 5,
-                ),
-                GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 5,
-                  shrinkWrap: true,
-                  childAspectRatio: 0.8,
-                  physics: ClampingScrollPhysics(),
-                  children: List.generate(products.length, (index) {
-                    return productCard(products[index]);
-                  }),
-                ),
+                // Container(
+                //     height: 110,
+                //     child: ListView.builder(
+                //       itemCount: categories.length,
+                //       shrinkWrap: true,
+                //       physics: ClampingScrollPhysics(),
+                //       scrollDirection: Axis.horizontal,
+                //       itemBuilder: (context, index) {
+                //         return category(
+                //             categories[index].imgPath!,
+                //             categories[index].name,
+                //             index,
+                //             categories[index].id);
+                //       },
+                //     ),
+                //   ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // products.length > 0
+                //     ? Text(
+                //         'Popular',
+                //         style: TextStyle(
+                //             fontFamily: 'GlobalFonts',
+                //             fontSize: 15,
+                //             color: BLACK,
+                //             fontWeight: FontWeight.w600),
+                //       )
+                //     : Center(),
+                // SizedBox(
+                //   height: 5,
+                // ),
+                // GridView.count(
+                //   crossAxisCount: 2,
+                //   crossAxisSpacing: 2,
+                //   mainAxisSpacing: 5,
+                //   shrinkWrap: true,
+                //   childAspectRatio: 0.8,
+                //   physics: ClampingScrollPhysics(),
+                //   children: List.generate(products.length, (index) {
+                //     return productCard(products[index]);
+                //   }),
+                // ),
                 SizedBox(
                   height: 40,
                 ),
@@ -307,6 +324,32 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     ));
+  }
+
+  Widget cardItemWidget(CategoryModel category) {
+    return InkWell(
+      onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+          builder: (context) => ProductsPage(
+                category: category,
+              ))),
+      child: Card(
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.network(category.imgPath!),
+            Text(
+              category.name,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget category(String imagePath, String name, int index, int id) {

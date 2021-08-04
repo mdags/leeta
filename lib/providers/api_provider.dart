@@ -4,6 +4,7 @@ import 'package:leeta/models/address_model.dart';
 import 'package:leeta/models/cart_model.dart';
 import 'package:leeta/models/category_model.dart';
 import 'package:leeta/models/favourite_model.dart';
+import 'package:leeta/models/member_model.dart';
 import 'package:leeta/models/order_modal.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:http/http.dart' as http;
@@ -35,34 +36,32 @@ class ApiProvider {
     }
   }
 
-  static Future<UserModel?> getProfile() async {
+  static Future<MemberModel?> getProfile() async {
     var response = await client.get(
-        Uri.parse(url + '/GetProfile?userId=' + USER_ID.toString()),
+        Uri.parse(url + '/GetMemberProfile?userId=' + USER_ID.toString()),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'bearer ' + ACCESS_TOKEN!
         });
     if (response.statusCode == 200) {
-      var list = userModelFromJson(response.body);
-      if (list.length > 0)
-        return list[0];
-      else
-        return null;
+      return memberModelFromJson(response.body);
     } else {
       return null;
     }
   }
 
-  static Future<String> updateProfile(UserModel model) async {
-    var response = await client.post(Uri.parse(url + '/UpdateProfile'),
+  static Future<String> updateProfile(MemberModel model) async {
+    var response = await client.post(Uri.parse(url + '/UpdateMemberProfile'),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'bearer ' + ACCESS_TOKEN!
         },
-        body: userModelToJsonSingle(model));
+        body: memberModelToJsonSingle(model));
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
+    } else if (response.statusCode == 500) {
+      return json.decode(response.body)["error"];
     } else {
       return "err:Service error.";
     }
@@ -71,7 +70,7 @@ class ApiProvider {
   static Future<String> changePassword(oldPassword, newPassword) async {
     var response = await client.get(
         Uri.parse(url +
-            '/ChangePassword?userId=' +
+            '/ChangeMemberPassword?userId=' +
             USER_ID.toString() +
             '&oldPassword=' +
             oldPassword +
@@ -83,16 +82,19 @@ class ApiProvider {
         });
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
+    } else if (response.statusCode == 500) {
+      return json.decode(response.body)["error"];
     } else {
       return "err:Service error.";
     }
   }
 
-  static Future<String?> uploadProfilePhoto(String filename) async {
+  static Future<String?> uploadProfilePhoto(
+      String filename, String path) async {
     var request = http.MultipartRequest('POST',
         Uri.parse(url + '/UpdateProfilePhoto?userId=' + USER_ID.toString()));
     request.headers["Authorization"] = "bearer " + ACCESS_TOKEN!;
-    request.files.add(await http.MultipartFile.fromPath('picture', filename));
+    request.files.add(await http.MultipartFile.fromPath(filename, path));
     var response = await request.send();
     print(response.statusCode);
     response.stream.transform(utf8.decoder).listen((value) {

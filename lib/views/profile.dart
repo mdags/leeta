@@ -19,16 +19,21 @@ class _ProfilePageState extends State<ProfilePage> {
     if (result != null) {
       PlatformFile? file = result.files.first;
 
-      print(file.name);
-      print(file.bytes);
-      print(file.size);
-      print(file.extension);
-      print(file.path);
+      // print(file.name);
+      // print(file.bytes);
+      // print(file.size);
+      // print(file.extension);
+      // print(file.path);
 
-      var response = await ApiProvider.uploadProfilePhoto(file.path.toString());
-      setState(() {
-        USER_PHOTO = "http://leeta.akillisirketler.com/uploads/" + file.name;
-      });
+      try {
+        var response = await ApiProvider.uploadProfilePhoto(
+            file.name, file.path.toString());
+        // setState(() {
+        //   USER_PHOTO = "http://leeta.akillisirketler.com/uploads/" + file.name;
+        // });
+      } on Exception catch (e) {
+        print(e);
+      }
     } else {
       print('User canceled the picker');
     }
@@ -171,14 +176,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 icon: Icon(
                   Icons.arrow_back_ios_rounded,
-                  size: 17,
+                  size: 24,
                 ),
               ),
             ),

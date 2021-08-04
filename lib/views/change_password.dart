@@ -14,22 +14,38 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   var _formKey = GlobalKey<FormState>();
   var txtOldPassword = new TextEditingController();
   var txtNewPassword = new TextEditingController();
+  bool _isLoading = false;
 
   void changePassword() async {
-    var response = await ApiProvider.changePassword(
-        txtOldPassword.text, txtNewPassword.text);
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: response.contains("err:") ? Text("Error") : Text("Done"),
-              content: response.contains("err:")
-                  ? Text(response.replaceAll("err:", ""))
-                  : Text("Your password has been changed successfully."),
-              actions: [
-                TextButton(
-                    onPressed: () => Navigator.pop(context), child: Text("OK"))
-              ],
-            ));
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      var response = await ApiProvider.changePassword(
+          txtOldPassword.text, txtNewPassword.text);
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: response.contains("err:") ? Text("Error") : Text("Done"),
+                content: response.contains("err:")
+                    ? Text(response.replaceAll("err:", ""))
+                    : Text("Your password has been changed successfully."),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        if (!response.contains("err:")) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -61,6 +77,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         children: [
                           TextFormField(
                             controller: txtOldPassword,
+                            obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Enter Old Password',
                               labelStyle: TextStyle(
@@ -87,6 +104,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           ),
                           TextFormField(
                             controller: txtNewPassword,
+                            obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Enter New Password',
                               labelStyle: TextStyle(
@@ -122,19 +140,24 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                             BorderRadius.circular(25)),
                                     backgroundColor: THEME_COLOR,
                                   ),
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      changePassword();
-                                    }
-                                  },
-                                  child: Text(
-                                    'Change Password',
-                                    style: TextStyle(
-                                        fontFamily: 'GlobalFonts',
-                                        color: BLACK,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                                  onPressed: _isLoading
+                                      ? null
+                                      : () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            changePassword();
+                                          }
+                                        },
+                                  child: _isLoading
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                          'Change Password',
+                                          style: TextStyle(
+                                              fontFamily: 'GlobalFonts',
+                                              color: BLACK,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                 ),
                               ),
                             ],

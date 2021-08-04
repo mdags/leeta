@@ -53,6 +53,6 @@ int USER_ID = 1; //0;
 // ignore: non_constant_identifier_names
 String USER_NAME = "Leeta";
 // ignore: non_constant_identifier_names
-String USER_GSM = "0";
+String USER_GSM = "505";
 // ignore: non_constant_identifier_names
 String USER_PHOTO = "";

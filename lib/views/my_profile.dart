@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:leeta/models/member_model.dart';
 import 'package:leeta/models/user_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/widgets/variables.dart';
@@ -22,7 +23,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     var data = await ApiProvider.getProfile();
     if (data != null) {
       txtName.text = data.userName;
-      txtGsm.text = data.userPhone;
+      txtGsm.text = data.userPhone!;
       txtEmail.text = data.userEmail!;
     }
   }
@@ -32,8 +33,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       isLoading = true;
     });
     try {
-      UserModel model = new UserModel(
-          userId: USER_ID, userName: txtName.text, userPhone: txtGsm.text);
+      MemberModel model = new MemberModel(
+          id: USER_ID, userName: txtName.text, userPhone: txtGsm.text);
       var response = await ApiProvider.updateProfile(model);
       showDialog(
           context: context,
@@ -44,11 +45,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     : Text("Your profile has been updated successfully."),
                 actions: [
                   TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        if (!response.contains("err:")) {
+                          Navigator.pop(context);
+                        }
+                      },
                       child: Text("OK"))
                 ],
               ));
-      print(response);
     } finally {
       setState(() {
         isLoading = false;
@@ -93,7 +98,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 TextFormField(
                   controller: txtName,
                   decoration: InputDecoration(
-                    labelText: 'Name',
+                    labelText: 'Name Surname',
                     labelStyle: TextStyle(
                         fontFamily: 'GlobalFonts',
                         color: GREY,

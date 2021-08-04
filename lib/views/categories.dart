@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leeta/models/category_model.dart';
 import 'package:leeta/providers/api_provider.dart';
+import 'package:leeta/views/products.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class CategoriesPage extends StatefulWidget {
@@ -11,12 +12,12 @@ class CategoriesPage extends StatefulWidget {
 }
 
 class _CategoriesPageState extends State<CategoriesPage> {
-  bool isLoading = false;
   var list = <CategoryModel>[];
+  bool _isLoading = false;
 
   void fetchList() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
 
     try {
@@ -26,7 +27,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       }
     } finally {
       setState(() {
-        isLoading = false;
+        _isLoading = false;
       });
     }
   }
@@ -41,45 +42,36 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Categories'),
+        title: Text("Categories"),
         elevation: 0.0,
         leading: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios_new)),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-          child: isLoading
-              ? Center(child: CircularProgressIndicator())
-              : GridView.count(
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  children: List.generate(list.length, (index) {
-                    return categoryItem(index);
-                  }),
-                ),
-        ),
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : GridView.count(
+              padding: const EdgeInsets.all(20.0),
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              crossAxisCount: 2,
+              childAspectRatio: 0.7,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 15,
+              children: List.generate(list.length, (index) {
+                return categoryItem(list[index]);
+              }),
+            ),
     );
   }
 
-  Widget categoryItem(int i) {
+  Widget categoryItem(CategoryModel category) {
     return InkWell(
       onTap: () async {
-        // bool res = await Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsPage(
-        //     "",
-        //     "",
-        //     "",
-        //     "",
-        //     list[i].id)));
-        // if(res!= null && res){
-        //   read();
-        // }
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (context) => ProductsPage(
+                  category: category,
+                )));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -97,7 +89,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       border: Border.all(color: GREY)),
-                  child: Image.network(list[i].imgPath!),
+                  child: Image.network(category.imgPath!),
                   // Center(
                   //   child: Text(
                   //     list[i].name.substring(0, 1),
@@ -114,7 +106,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   height: 20,
                 ),
                 Text(
-                  list[i].name,
+                  category.name,
                   style: TextStyle(
                     fontFamily: 'GlobalFonts',
                     color: BLACK,

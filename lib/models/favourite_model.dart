@@ -14,7 +14,6 @@ String favouriteModelToJson(List<FavouriteModel> data) =>
 class FavouriteModel {
   FavouriteModel({
     required this.id,
-    required this.shopId,
     required this.productId,
     required this.userId,
     required this.createdDate,
@@ -28,7 +27,6 @@ class FavouriteModel {
   });
 
   int id;
-  int shopId;
   int productId;
   int userId;
   String createdDate;
@@ -42,7 +40,6 @@ class FavouriteModel {
 
   factory FavouriteModel.fromJson(Map<String, dynamic> json) => FavouriteModel(
         id: json["id"],
-        shopId: json["shop_id"],
         productId: json["product_id"],
         userId: json["user_id"],
         createdDate: json["created_date"] ?? "",
@@ -57,7 +54,6 @@ class FavouriteModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "shop_id": shopId,
         "product_id": productId,
         "user_id": userId,
         "created_date": createdDate,

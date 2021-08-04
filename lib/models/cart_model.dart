@@ -14,7 +14,6 @@ class CartModel {
   CartModel({
     this.id,
     required this.userId,
-    this.shopId,
     required this.productId,
     required this.qty,
     this.createdDate,
@@ -29,7 +28,6 @@ class CartModel {
 
   int? id;
   int userId;
-  int? shopId;
   int productId;
   int qty;
   String? createdDate;
@@ -44,7 +42,6 @@ class CartModel {
   factory CartModel.fromJson(Map<String, dynamic> json) => CartModel(
         id: json["id"],
         userId: json["user_id"],
-        shopId: json["shop_id"],
         productId: json["product_id"],
         qty: json["qty"],
         createdDate: json["created_date"] ?? "",
@@ -54,13 +51,12 @@ class CartModel {
         productName: json["product_name"] ?? "",
         productImgPath: json["product_img_path"] ?? "",
         currencySymbol: json["currency_symbol"] ?? "",
-        totalAmount: json["total_amount"] ?? 0,
+        totalAmount: json["total_amount"].toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "user_id": userId,
-        "shop_id": shopId,
         "product_id": productId,
         "qty": qty,
         "created_date": createdDate,

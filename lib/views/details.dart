@@ -273,10 +273,13 @@ class _DetailsPageState extends State<DetailsPage> {
                       )
                     ],
                   )
-                : Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
                   ),
             actions: isAdded
                 ? [

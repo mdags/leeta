@@ -32,7 +32,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       }
     } finally {
       setState(() {
-        isLoading = true;
+        isLoading = false;
       });
     }
   }

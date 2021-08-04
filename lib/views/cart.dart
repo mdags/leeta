@@ -382,8 +382,13 @@ class _CartPageState extends State<CartPage> {
                       )
                     ],
                   )
-                : Center(
-                    child: CircularProgressIndicator(),
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
                   ),
             actions: isProcessing
                 ? [

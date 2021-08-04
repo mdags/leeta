@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:leeta/models/order_modal.dart';
-import 'package:leeta/views/order_history.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class OrderProgressPage extends StatefulWidget {
@@ -67,8 +66,8 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                             ),
                             Text(
                               "Order Date.: " +
-                                  DateFormat("dd.MM.yyyy HH:mm").format(
-                                      DateTime.parse(widget.order.createdDate)),
+                                  DateFormat("dd.MM.yyyy HH:mm")
+                                      .format(widget.order.createdDate!),
                               style: TextStyle(
                                 fontFamily: 'GlobalFonts',
                                 color: BLACK,
@@ -500,7 +499,7 @@ class _OrderProgressPageState extends State<OrderProgressPage> {
                             ),
                             Text(
                               item.currencySymbol! +
-                                  item.price.toStringAsFixed(2),
+                                  item.unitPrice.toStringAsFixed(2),
                               style: TextStyle(
                                   fontFamily: 'GlobalFonts',
                                   color: BLACK,

@@ -7,29 +7,31 @@ import 'package:leeta/models/favourite_model.dart';
 import 'package:leeta/models/order_modal.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:leeta/models/token_model.dart';
 import 'package:leeta/models/user_model.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class ApiProvider {
-  static String tokenUrl = 'http://leeta.akillisirketler.com/token';
+  static String tokenUrl =
+      'https://leeta.azurewebsites.net/api/token/Authenticate';
   static String tokenUser = 'leeta_sa';
   static String tokenPass = 'Le2021..';
-  static String url = 'http://leeta.akillisirketler.com/api/v1';
+  static String url = 'https://leeta.azurewebsites.net/api/v1';
   static var client = http.Client();
 
   static Future<void> getToken() async {
-    var response = await client.post(Uri.parse(tokenUrl), headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }, body: {
-      'grant_type': 'password',
-      'username': tokenUser,
-      'password': tokenPass
-    });
+    var response = await client.post(Uri.parse(tokenUrl),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: json.encode({
+          "user_name": "leeta_sa",
+          "user_password": "Le2021..",
+          "role": "admin"
+        }));
     if (response.statusCode == 200) {
-      var token = tokenModelFromJson(response.body);
-      ACCESS_TOKEN = token.accessToken;
+      var decodeList = json.decode(response.body);
+      ACCESS_TOKEN = decodeList["token"];
     }
   }
 
@@ -62,7 +64,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -82,7 +84,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -163,7 +165,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -197,7 +199,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -210,7 +212,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -224,7 +226,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -239,7 +241,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -301,7 +303,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 
@@ -314,7 +316,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       return response.body.split('"').join('');
     } else {
-      return "err:Servis çağırılamadı.";
+      return "err:Service error.";
     }
   }
 }

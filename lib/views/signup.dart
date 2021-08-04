@@ -423,11 +423,13 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                color: THEME_COLOR,
+                style: TextButton.styleFrom(
+                  primary: THEME_COLOR,
+                ),
                 child: Text(
                   'OK',
                   style: TextStyle(

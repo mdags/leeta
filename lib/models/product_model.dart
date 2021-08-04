@@ -13,7 +13,6 @@ String productModelToJson(List<ProductModel> data) =>
 class ProductModel {
   ProductModel({
     required this.id,
-    required this.shopId,
     required this.catId,
     required this.name,
     this.description,
@@ -39,7 +38,6 @@ class ProductModel {
   });
 
   int id;
-  int shopId;
   int catId;
   String name;
   String? description;
@@ -65,9 +63,8 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
-        shopId: json["shop_id"],
         catId: json["cat_id"],
-        name: json["name"],
+        name: json["name"] ?? "",
         description: json["description"] ?? "",
         productUnit: json["product_unit"],
         unitPrice: json["unit_price"].toDouble(),
@@ -76,7 +73,7 @@ class ProductModel {
         searchTag: json["search_tag"] ?? "",
         highlightInformation: json["highlight_information"] ?? "",
         isDiscount: json["is_discount"],
-        overallRating: json["overall_rating"],
+        overallRating: json["overall_rating"].toDouble(),
         touchCount: json["touch_count"],
         favouriteCount: json["favourite_count"],
         likeCount: json["like_count"],
@@ -85,14 +82,13 @@ class ProductModel {
         createdUserId: json["created_user_id"],
         updatedDate: json["updated_date"] ?? "",
         updatedUserId: json["updated_user_id"],
-        currencySymbol: json["currency_symbol"],
+        currencySymbol: json["currency_symbol"] ?? "",
         isFavourite: json["is_favourite"],
         cartCount: json["cart_count"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "shop_id": shopId,
         "cat_id": catId,
         "name": name,
         "description": description,

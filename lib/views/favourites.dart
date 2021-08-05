@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leeta/models/favourite_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/details.dart';
+import 'package:leeta/widgets/please_login_body.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class FavouritesPage extends StatefulWidget {
@@ -54,35 +55,39 @@ class _FavouritesPageState extends State<FavouritesPage> {
             onPressed: () => Navigator.pop(context),
             icon: Icon(Icons.arrow_back_ios_new)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 40,
-              ),
-              Container(
-                child: isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation(THEME_COLOR),
-                        ),
-                      )
-                    : GridView.count(
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.7,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                        children: List.generate(list.length, (index) {
-                          return favouriteItem(index);
-                        }),
+      body: !IS_LOGGED_IN ? PleaseLoginBody() : bodyWidget(),
+    );
+  }
+
+  Widget bodyWidget() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+            ),
+            Container(
+              child: isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(THEME_COLOR),
                       ),
-              ),
-            ],
-          ),
+                    )
+                  : GridView.count(
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.7,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
+                      children: List.generate(list.length, (index) {
+                        return favouriteItem(index);
+                      }),
+                    ),
+            ),
+          ],
         ),
       ),
     );

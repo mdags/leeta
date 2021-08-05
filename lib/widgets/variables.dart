@@ -45,14 +45,14 @@ const ALERT_BUTTON_TEXT_STYLE = TextStyle(
 );
 
 // ignore: non_constant_identifier_names
-bool IS_LOGGED_IN = true;
+bool IS_LOGGED_IN = false;
 // ignore: non_constant_identifier_names
 String? ACCESS_TOKEN;
 // ignore: non_constant_identifier_names
-int USER_ID = 1; //0;
+int USER_ID = 0;
 // ignore: non_constant_identifier_names
 String USER_NAME = "Leeta";
 // ignore: non_constant_identifier_names
-String USER_GSM = "505";
+String USER_GSM = "";
 // ignore: non_constant_identifier_names
 String USER_PHOTO = "";

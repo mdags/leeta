@@ -4,7 +4,6 @@ import 'package:leeta/models/category_model.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/cart.dart';
-import 'package:leeta/views/categories.dart';
 import 'package:leeta/views/details.dart';
 import 'package:leeta/views/favourites.dart';
 import 'package:leeta/views/login.dart';
@@ -99,8 +98,8 @@ class _HomePageState extends State<HomePage> {
       // drawer: SideMenu(),
       body: bodyWidget(),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context)
-              .push(new MaterialPageRoute(builder: (context) => SearchPage())),
+          onPressed: () => Navigator.of(context).push(new MaterialPageRoute(
+              builder: (context) => SearchPage(), fullscreenDialog: true)),
           child: Icon(
             Icons.search,
             size: 32,

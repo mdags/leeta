@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/cart.dart';
+import 'package:leeta/views/login.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -216,18 +217,24 @@ class _DetailsPageState extends State<DetailsPage> {
                     Expanded(
                       child: InkWell(
                         onTap: () {
-                          showdialog(false);
-                          setCart().then((value) {
-                            Navigator.pop(context);
-                            showdialog(true);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                'Product added to cart',
-                                style: SNACKBAR_TEXT_STYLE,
-                              ),
-                              duration: Duration(seconds: 2),
-                            ));
-                          });
+                          if (IS_LOGGED_IN) {
+                            showdialog(false);
+                            setCart().then((value) {
+                              Navigator.pop(context);
+                              showdialog(true);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                  'Product added to cart',
+                                  style: SNACKBAR_TEXT_STYLE,
+                                ),
+                                duration: Duration(seconds: 2),
+                              ));
+                            });
+                          } else {
+                            Navigator.of(context).push(new MaterialPageRoute(
+                                builder: (context) => LoginPage()));
+                          }
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -236,8 +243,9 @@ class _DetailsPageState extends State<DetailsPage> {
                           ),
                           child: Center(
                             child: Text(
-                              'Add To Cart',
-                              style: STD_TEXT_STYLE,
+                              IS_LOGGED_IN ? 'Checkout' : 'Login To Proceed',
+                              style: STD_TEXT_STYLE.copyWith(
+                                  fontSize: 18, fontWeight: FontWeight.w900),
                             ),
                           ),
                         ),

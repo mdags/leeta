@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
                         fontSize: 23)))),
         routes: <String, WidgetBuilder>{
           '/login': (BuildContext context) => new LoginPage(),
+          '/home': (BuildContext context) => new HomePage(),
         },
       ),
     );

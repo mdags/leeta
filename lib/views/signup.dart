@@ -24,7 +24,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
 //  @override
 //   void initState() {
-//     // TODO: implement initState
 //     super.initState();
 //     getToken();
 //   }
@@ -41,66 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
 //   }
 
-//   registerUser() async {
-//     if (name.isEmpty) {
-//       setState(() {
-//         isNameError = true;
-//       });
-//     }
-//     else if (phoneNumber.length < 10) {
-//       setState(() {
-//         isPhoneNumberError = true;
-//         phnNumberError = ENTER_PHONE_NUMBER;
-//       });
-//     }
-//     else if (EmailValidator.validate(email) == false) {
-//       setState(() {
-//         isEmailError = true;
-//       });
-//     }
-//     else if (password != confirmPassword || password.length == 0) {
-//       setState(() {
-//         isPassError = true;
-//       });
-//     }
-//     else {
-//       dialog();
-//       //Toast.show("Creating account please wait", context);
-//       String url = "$SERVER_ADDRESS/api/register";
-//       var response = await http.post(url, body: {
-//         'name': name,
-//         'email': email,
-//         'mobile_no': phoneNumber,
-//         'password': password,
-//         'token': token
-//       });
-//       print(response.statusCode);
-//       print(response.body);
-//       var jsonResponse = await convert.jsonDecode(response.body);
-//       if (jsonResponse['data']['success'] == "0") {
-//         setState(() {
-//           Navigator.pop(context);
-//           error = jsonResponse['data']['register'];
-//           messageDialog(ERROR, error);
-//           //isPhoneNumberError = true;
-//         });
-//       }
-//       else{
-//         await SharedPreferences.getInstance().then((pref){
-//           pref.setBool("isLoggedIn", true);
-//           pref.setString("userId", jsonResponse['data']['register']['user_id'].toString());
-//           pref.setString("name", jsonResponse['data']['register']['name']);
-//           pref.setString("phone", jsonResponse['data']['register']['phone']);
-//           pref.setString("email", jsonResponse['data']['register']['email']);
-//           pref.setString("token", token.toString());
-//         });
-//         Navigator.of(context).popUntil((route) => route.isFirst);
-//         Navigator.pushReplacement(context,
-//           MaterialPageRoute(builder: (context) => HomeScreen())
-//         );
-//       }
-//     }
-//   }
+  registerUser() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -335,9 +275,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   ),
                                   padding: EdgeInsets.all(12),
                                 ),
-                                onPressed: () {
-                                  // registerUser();
-                                },
+                                onPressed: () => registerUser(),
                                 child: Text('Sign In',
                                     style: TextStyle(
                                       fontFamily: 'GlobalFonts',

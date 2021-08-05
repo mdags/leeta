@@ -23,7 +23,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset("assets/images/no_notification.png"),
+          Center(child: Image.asset("assets/images/no_notification.png")),
+          SizedBox(
+            height: 20.0,
+          ),
           Text("Not Have Notification"),
         ],
       ),

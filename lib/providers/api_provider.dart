@@ -8,7 +8,6 @@ import 'package:leeta/models/member_model.dart';
 import 'package:leeta/models/order_modal.dart';
 import 'package:leeta/models/product_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:leeta/models/user_model.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class ApiProvider {
@@ -33,6 +32,32 @@ class ApiProvider {
     if (response.statusCode == 200) {
       var decodeList = json.decode(response.body);
       ACCESS_TOKEN = decodeList["token"];
+    }
+  }
+
+  static Future<String> login(String username, String password) async {
+    var response = await client.get(
+        Uri.parse(url +
+            '/MemberLogin?username=' +
+            username +
+            '&password=' +
+            password),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'bearer ' + ACCESS_TOKEN!
+        });
+    if (response.statusCode == 200) {
+      var member = memberModelFromJson(response.body);
+      USER_ID = member.id!;
+      IS_LOGGED_IN = true;
+      USER_NAME = member.userName;
+      USER_GSM = member.userPhone!;
+      USER_PHOTO = member.imgPath!;
+      return member.id.toString();
+    } else if (response.statusCode == 500) {
+      return json.decode(response.body)["error"];
+    } else {
+      return "err:Service error.";
     }
   }
 
@@ -134,8 +159,9 @@ class ApiProvider {
     }
   }
 
-  static Future<List<ProductModel>?> fetchProductsForSearhc() async {
-    var response = await client.get(Uri.parse(url + '/GetProductForSearch'),
+  static Future<List<ProductModel>?> fetchProductsForSearch() async {
+    var response = await client.get(
+        Uri.parse(url + '/GetProductForSearch?userId=' + USER_ID.toString()),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'bearer ' + ACCESS_TOKEN!

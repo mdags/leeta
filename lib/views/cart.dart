@@ -3,6 +3,7 @@ import 'package:leeta/models/cart_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/checkout.dart';
 import 'package:leeta/views/login.dart';
+import 'package:leeta/widgets/please_login_alert.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class CartPage extends StatefulWidget {
@@ -318,21 +319,17 @@ class _CartPageState extends State<CartPage> {
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: IS_LOGGED_IN && list.length == 0
-                                ? null
-                                : () {
-                                    IS_LOGGED_IN
-                                        ? Navigator.of(context).push(
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CheckoutPage(
-                                                      list: list,
-                                                    )))
-                                        : Navigator.of(context).push(
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginPage()));
-                                  },
+                            onPressed: () {
+                              IS_LOGGED_IN
+                                  ? Navigator.of(context)
+                                      .push(new MaterialPageRoute(
+                                          builder: (context) => CheckoutPage(
+                                                list: list,
+                                              )))
+                                  : Navigator.of(context).push(
+                                      new MaterialPageRoute(
+                                          builder: (context) => LoginPage()));
+                            },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(13),
                               primary: THEME_COLOR,

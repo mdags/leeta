@@ -13,6 +13,7 @@ import 'package:leeta/views/products.dart';
 import 'package:leeta/views/profile.dart';
 import 'package:leeta/views/search.dart';
 import 'package:leeta/widgets/variables.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -53,6 +54,13 @@ class _HomePageState extends State<HomePage> {
         });
 
         fetchProducts(categories[0].id.toString());
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String username = prefs.getString('username') ?? "";
+        String password = prefs.getString('password') ?? "";
+        if (username.isNotEmpty) {
+          await ApiProvider.login(username, password);
+        }
       }
     } finally {
       setState(() {
@@ -340,7 +348,12 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.network(category.imgPath!),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.09,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(category.imgPath!)),
+            ),
             Text(
               category.name,
               textAlign: TextAlign.center,

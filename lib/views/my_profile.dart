@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:leeta/models/member_model.dart';
-import 'package:leeta/models/user_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/widgets/variables.dart';
 

@@ -3,7 +3,6 @@ import 'package:leeta/models/cart_model.dart';
 import 'package:leeta/providers/api_provider.dart';
 import 'package:leeta/views/checkout.dart';
 import 'package:leeta/views/login.dart';
-import 'package:leeta/widgets/please_login_alert.dart';
 import 'package:leeta/widgets/variables.dart';
 
 class CartPage extends StatefulWidget {

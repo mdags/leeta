@@ -1,4 +1,4 @@
-package com.example.leeta
+package com.ilerleyen.leeta
 
 import io.flutter.embedding.android.FlutterActivity
 

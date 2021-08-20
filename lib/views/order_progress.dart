@@ -15,7 +15,6 @@ class OrderProgressPage extends StatefulWidget {
 class _OrderProgressPageState extends State<OrderProgressPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

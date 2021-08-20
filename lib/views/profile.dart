@@ -29,6 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
       try {
         var response = await ApiProvider.uploadProfilePhoto(
             file.name, file.path.toString());
+        print(response);
         // setState(() {
         //   USER_PHOTO = "http://leeta.akillisirketler.com/uploads/" + file.name;
         // });

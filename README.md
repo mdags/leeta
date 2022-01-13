@@ -15,11 +15,12 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068217.png | width=100)
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068222.png)
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068224.png)
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068229.png)
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068233.png)
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068241.png)
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068246.png)
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068249.png)
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068217.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068217.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068222.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068224.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068229.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068233.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068241.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068246.png">
+<img width="150" alt="portfolio_view" src="https://github.com/mdags/leeta/blob/master/Screenshot_1642068249.png">

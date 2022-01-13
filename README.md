@@ -15,7 +15,7 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068217.png)
+![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068217.png | width=100)
 ![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068222.png)
 ![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068224.png)
 ![alt text](https://github.com/mdags/leeta/blob/master/Screenshot_1642068229.png)
